@@ -16,6 +16,6 @@ DataCenter::DataCenter(int dataCenterId, int numberOfServers)
 
     windowsListEnd = new Server(-3);
     windowsListHead = new Server(-4,windowsListEnd);
-
+    windowsListEnd->setPrevious(windowsListHead);
 
 }
