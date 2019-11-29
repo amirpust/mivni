@@ -41,15 +41,15 @@ int DataCenter::getWindowsServerNumber() const {
 
 void DataCenter::initializeListAndPointerArray() {
     auto firstServer = new Server(0); //TODO: OOM throw
-    firstServer->setPrevious(linuxListHead);
-    firstServer->setNext(linuxListEnd);
+
+    firstServer->addServerToList(linuxListEnd,linuxListHead);
     pointerArray[0]=firstServer;
     for (int i = 1; i < numberOfServers; ++i) {
         auto temp = new  Server(i);
-        pointerArray[i-1]->setNext(temp);
+        temp->addServerToList(linuxListEnd,pointerArray[i-1]);
+
         pointerArray[i] = temp;
-        temp->setNext(linuxListEnd);
-        temp->setPrevious(pointerArray[i-1]);
+
     }
     linuxListEnd->setPrevious(pointerArray[numberOfServers-1]);
 }
