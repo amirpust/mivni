@@ -7,19 +7,26 @@
 #include "Server.h"
 
 class DataCenter {
-private:
     int dataCenterID;
     int numberOfServers;
     int linuxServerNumber;
     int WindowsServerNumber;
     Server** pointerArray;
     Server* linuxListHead;
-    Server* linuxListend;
+    Server* linuxListEnd;
     Server* windowsListHead;
-    Server* windowsListend;
+    Server* windowsListEnd;
+
+
+
 public:
     DataCenter(int dataCenterId, int numberOfServers);
 
+
+private:
+    void initializeListAndPointerArray(){
+
+    }
 };
 
 
