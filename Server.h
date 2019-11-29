@@ -19,6 +19,10 @@ public:
 
     ~Server() = default;
 
+    void setOs(int os) {
+        Server::os = os;
+    }
+
     int getOs(){
         return os;
     }
