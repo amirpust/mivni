@@ -51,6 +51,8 @@ public:
 private:
     void initializeListAndPointerArray();
 
+
+    //checks if a server is available if not it assigns a compatible one
     void getServerByOs(int os, int *assignedServerId) {
         if (os && windowsListHead->getNext() != windowsListEnd) {
             assignServer(assignedServerId,windowsListHead->getNext()->getId());
