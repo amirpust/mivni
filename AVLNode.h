@@ -18,8 +18,8 @@ private:
     int nodeHeight;
 
 public:
-    AVLNode(DataCenter *currentDataCenter, AVLNode *father = NULL
-            , AVLNode *rightSon = NULL, AVLNode *leftSon = NULL, int nodeHeight = NULL);
+    AVLNode(DataCenter *currentDataCenter, AVLNode *father = nullptr
+            , AVLNode *rightSon = nullptr, AVLNode *leftSon = nullptr, int nodeHeight = 0);
 
     int getNodeHeight() const;
 
