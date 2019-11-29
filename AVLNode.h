@@ -22,8 +22,8 @@ public:
     explicit AVLNode(Data *currentData, AVLNode *father = NULL,
             AVLNode *rightSon = NULL, AVLNode *leftSon = NULL,
             int nodeHeight = 0)
-            : father(father), rightSon(rightSon), leftSon(leftSon),
-            currentData(currentData), nodeHeight(nodeHeight) {}
+            : currentData(currentData), father(father), rightSon(rightSon), leftSon(leftSon),
+             nodeHeight(nodeHeight) {}
 
     AVLNode<Data> *getFather() const ;
 
@@ -35,17 +35,11 @@ public:
 
     AVLNode *getLeftSon() const;
 
-    void setLeftSon(AVLNode *leftSon) {
-        AVLNode::leftSon = leftSon;
-    }
+    void setLeftSon(AVLNode *leftSon);
 
-    Data *getCurrentData() const {
-        return currentData;
-    }
+    Data *getCurrentData() const ;
 
-    void setCurrentData(Data *currentData) {
-        AVLNode::currentData = currentData;
-    }
+    int getNodeHeight() const;
 
 };
 

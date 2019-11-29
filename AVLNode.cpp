@@ -26,3 +26,18 @@ template <class  Data>
 AVLNode<Data>* AVLNode<Data>::getLeftSon() const {
     return leftSon;
 }
+
+template <class  Data>
+void AVLNode<Data>::setLeftSon(AVLNode *leftSon) {
+    AVLNode::leftSon = leftSon;
+}
+
+template <class Data>
+Data* AVLNode<Data>::getCurrentData() const {
+    return currentData;
+}
+
+template<class Data>
+int AVLNode<Data>::getNodeHeight() const {
+    return nodeHeight;
+}
