@@ -3,7 +3,10 @@
 
 #include <stdio.h>
 
-Class Server{
+#define LINUX 0
+#define WINDOWS 1
+
+class Server{
     int os;
     int id;
     Server* next;
@@ -11,8 +14,9 @@ Class Server{
     bool taken;
 
 public:
-    Server(int id, Server* next = NULL, Server* previous = NULL){
-
+    explicit Server(int id, Server* next = NULL, Server* previous = NULL): id(id), next(next), previous(previous){
+        os = LINUX;
+        taken = false;
     }
 };
 
