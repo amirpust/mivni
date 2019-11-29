@@ -22,8 +22,10 @@ public:
     /**
      * The Function switch between OS's and already remove/add it from/to the new list.
      * Need the new list ptr's - can be nullptr (that's why it need both)
+     * In addition its mark the Server as taken
      * @param newNext: the new next ptr for the new list
      * @param newPrev: the new previous ptr for the new list
+     * @throw exception: in case the Server is already taken //TODO
      */
     void switchOs (Server* newNext, Server* newPrev){
         if(taken)
@@ -43,21 +45,39 @@ public:
         this->taken = _taken;
     }
 
+    int getId() const {
+        return id;
+    }
+
+    Server *getNext() const {
+        return next;
+    }
+
+    Server *getPrevious() const {
+        return previous;
+    }
+    void setPrevious(Server *previous) {
+        Server::previous = previous;
+    }
+    void setNext(Server *next) {
+        Server::next = next;
+    }
+
 
 private:
     void removeServerFromList(){
         if (previous != nullptr)
-            previous->next = next;
+            previous->setNext(next);
         if (next != nullptr)
-            next->previous = previous;
+            next->setPrevious(previous);
     }
     void addServerToList(Server* newNext, Server* newPrev){
         next = newNext;
         previous = newPrev;
         if(newNext != nullptr)
-            newNext->previous=this;
+            newNext->setPrevious(this);
         if(newPrev != nullptr)
-            newPrev->next=this;
+            newPrev->setNext(this);
     }
 };
 
