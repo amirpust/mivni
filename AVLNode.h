@@ -41,6 +41,7 @@ public:
 
     int getNodeHeight() const;
 
+
 };
 
 #endif //_NODE_H
