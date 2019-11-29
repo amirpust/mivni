@@ -32,8 +32,6 @@ public:
 
     void setLeftSon(AvlNode *leftSon);
 
-    
-
 };
 
 #endif //_NODE_H
