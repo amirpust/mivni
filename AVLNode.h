@@ -1,7 +1,3 @@
-//
-// Created by Amir on 29/11/2019.
-//
-
 #ifndef _NODE_H
 #define _NODE_H
 
@@ -19,7 +15,8 @@ private:
 
 public:
     AVLNode(DataCenter *currentDataCenter, AVLNode *father = nullptr
-            , AVLNode *rightSon = nullptr, AVLNode *leftSon = nullptr, int nodeHeight = 0);
+            , AVLNode *rightSon = nullptr, AVLNode *leftSon = nullptr
+                    , int nodeHeight = 0);
 
     int getNodeHeight() const;
 
@@ -40,6 +37,8 @@ public:
     AVLNode *getLeftSon() const;
 
     void setLeftSon(AVLNode *leftSon);
+
+    virtual ~AVLNode() = default;
 };
 
 #endif //_NODE_H

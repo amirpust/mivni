@@ -1,7 +1,3 @@
-//
-// Created by Amir on 29/11/2019.
-//
-
 #include "AVLNode.h"
 
 AVLNode::AVLNode(DataCenter *currentDataCenter, AVLNode *father
@@ -51,3 +47,5 @@ int AVLNode::getNodeHeight() const {
 void AVLNode::setNodeHeight(int nodeHeight) {
     AVLNode::nodeHeight = nodeHeight;
 }
+
+AVLNode::~AVLNode() {}

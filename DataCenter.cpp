@@ -1,14 +1,10 @@
-//
-// Created by jonat on 29/11/2019.
-//
-
 #include "DataCenter.h"
 
 DataCenter::DataCenter(int dataCenterId, int numberOfServers)
         : dataCenterID(dataCenterId), numberOfServers(numberOfServers) {
     pointerArray = new Server*[numberOfServers];
     linuxServerNumber = numberOfServers;
-    WindowsServerNumber =  0;
+    windowsServerNumber =  0;
 
     linuxListEnd = new Server(-1);
     linuxListHead = new Server(-2);//TODO: check if we can remove magic numbers
@@ -35,23 +31,24 @@ int DataCenter::getLinuxServerNumber() const {
     return linuxServerNumber;
 }
 
-int DataCenter::getWindowsServerNumber() const {
-    return WindowsServerNumber;
+int DataCenter::getwindowsServerNumber() const {
+    return windowsServerNumber;
 }
 
 void DataCenter::initializeListAndPointerArray() {
+    if(numberOfServers == 0)
+        return;
+
     auto firstServer = new Server(0); //TODO: OOM throw
 
     firstServer->addServerToList(linuxListEnd,linuxListHead);
     pointerArray[0]=firstServer;
+
     for (int i = 1; i < numberOfServers; ++i) {
         auto temp = new  Server(i);
         temp->addServerToList(linuxListEnd,pointerArray[i-1]);
-
         pointerArray[i] = temp;
-
     }
-    linuxListEnd->setPrevious(pointerArray[numberOfServers-1]);
 }
 
 const bool DataCenter::operator==(const int key) const {
