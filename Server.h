@@ -19,22 +19,6 @@ public:
 
     ~Server() = default;
 
-    /**
-     * The Function switch between OS's and already remove/add it from/to the new list.
-     * It needs the new list ptr's - can be nullptr (that's why it needs them both)
-     * In addition its marks the Server as taken
-     * @param newNext: the new next ptr for the new list
-     * @param newPrev: the new previous ptr for the new list
-     * @throw exception: in case the Server is already taken //TODO
-     */
-    void switchOs (Server* newNext, Server* newPrev){
-        if(taken)
-            return; //TODO: throw
-        removeServerFromList();
-        os = 1 - os;
-        addServerToList(newNext,newPrev);
-        taken = true;
-    }
     int getOs(){
         return os;
     }
