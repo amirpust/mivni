@@ -9,19 +9,23 @@
 #include "Server.h"
 #include "DataCenter.h"
 
+template<class Data>
 class AVLNode {
 private:
     AVLNode *father;
     AVLNode *rightSon;
     AVLNode *leftSon;
-    DataCenter *currentFarm;
+    Data *currentData;
     int nodeHeight;
 
 public:
-    explicit AVLNode(DataCenter *currentFarmNode, AVLNode *fatherNode = nullptr
-            , AVLNode *rightSonNode = nullptr, AVLNode *leftSonNode = nullptr);
+    explicit AVLNode(Data *currentData, AVLNode *father = NULL,
+            AVLNode *rightSon = NULL, AVLNode *leftSon = NULL,
+            int nodeHeight = 0)
+            : father(father), rightSon(rightSon), leftSon(leftSon),
+            currentData(currentData), nodeHeight(nodeHeight) {}
 
-    AVLNode *getFather() const;
+    AVLNode<Data> *getFather() const ;
 
     void setFather(AVLNode *father);
 
@@ -31,11 +35,18 @@ public:
 
     AVLNode *getLeftSon() const;
 
-    void setLeftSon(AVLNode *leftSon);
+    void setLeftSon(AVLNode *leftSon) {
+        AVLNode::leftSon = leftSon;
+    }
 
-    int getnodeHeight() const;
+    Data *getCurrentData() const {
+        return currentData;
+    }
 
-    void setnodeHeight(int nodeHeight);
+    void setCurrentData(Data *currentData) {
+        AVLNode::currentData = currentData;
+    }
+
 };
 
 #endif //_NODE_H

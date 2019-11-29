@@ -11,11 +11,30 @@ DataCenter::DataCenter(int dataCenterId, int numberOfServers)
     WindowsServerNumber =  0;
 
     linuxListEnd = new Server(-1);
-    linuxListHead = new Server(-2,linuxListEnd);//TODO: check if we can remove magic numbers
+    linuxListHead = new Server(-2);//TODO: check if we can remove magic numbers
     linuxListEnd->setPrevious(linuxListHead);
+    linuxListHead->setNext(linuxListEnd);
 
     windowsListEnd = new Server(-3);
-    windowsListHead = new Server(-4,windowsListEnd);
+    windowsListHead = new Server(-4);
     windowsListEnd->setPrevious(windowsListHead);
+    windowsListHead->setNext(windowsListEnd);
 
+    initializeListAndPointerArray();
+}
+
+int DataCenter::getDataCenterId() const {
+    return dataCenterID;
+}
+
+int DataCenter::getNumberOfServers() const {
+    return numberOfServers;
+}
+
+int DataCenter::getLinuxServerNumber() const {
+    return linuxServerNumber;
+}
+
+int DataCenter::getWindowsServerNumber() const {
+    return WindowsServerNumber;
 }

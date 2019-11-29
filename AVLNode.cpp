@@ -3,41 +3,26 @@
 //
 
 #include "AVLNode.h"
-
-AVLNode::AVLNode(DataCenter *currentFarm, AVLNode *fatherNode
-        , AVLNode *rightSon, AVLNode *leftSon)
-        : father(father), rightSon(rightSon),
-          leftSon(leftSon),
-          currentFarm(currentFarm) {}
-
-AVLNode *AVLNode::getFather() const {
+template <class Data>
+AVLNode<Data>* AVLNode<Data>::getFather() const {
     return father;
 }
-
-void AVLNode::setFather(AVLNode *father) {
+template <class Data>
+void AVLNode<Data>::setFather(AVLNode *father) {
     AVLNode::father = father;
 }
 
-AVLNode *AVLNode::getRightSon() const {
+template <class Data>
+AVLNode<Data>* AVLNode<Data>::getRightSon() const {
     return rightSon;
 }
 
-void AVLNode::setRightSon(AVLNode *rightSon) {
+template <class Data>
+void AVLNode<Data>::setRightSon(AVLNode *rightSon) {
     AVLNode::rightSon = rightSon;
 }
 
-AVLNode *AVLNode::getLeftSon() const {
+template <class  Data>
+AVLNode<Data>* AVLNode<Data>::getLeftSon() const {
     return leftSon;
-}
-
-void AVLNode::setLeftSon(AVLNode *leftSon) {
-    AVLNode::leftSon = leftSon;
-}
-
-int AVLNode::getnodeHeight() const {
-    return nodeHeight;
-}
-
-void AVLNode::setnodeHeight(int nodeHeight) {
-    AVLNode::nodeHeight = nodeHeight;
 }
