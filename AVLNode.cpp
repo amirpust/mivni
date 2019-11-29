@@ -3,41 +3,51 @@
 //
 
 #include "AVLNode.h"
-template <class Data>
-AVLNode<Data>* AVLNode<Data>::getFather() const {
+
+AVLNode::AVLNode(DataCenter *currentDataCenter, AVLNode *father
+        , AVLNode *rightSon, AVLNode *leftSon, int nodeHeight)
+        : currentDataCenter(currentDataCenter), father(father), rightSon(rightSon)
+        , leftSon(leftSon),
+          nodeHeight(nodeHeight) {
+
+}
+
+DataCenter *AVLNode::getCurrentDataCenter() const {
+    return currentDataCenter;
+}
+
+void AVLNode::setCurrentDataCenter(DataCenter *currentDataCenter) {
+    AVLNode::currentDataCenter = currentDataCenter;
+}
+
+AVLNode *AVLNode::getFather() const {
     return father;
 }
-template <class Data>
-void AVLNode<Data>::setFather(AVLNode *father) {
+
+void AVLNode::setFather(AVLNode *father) {
     AVLNode::father = father;
 }
 
-template <class Data>
-AVLNode<Data>* AVLNode<Data>::getRightSon() const {
+AVLNode *AVLNode::getRightSon() const {
     return rightSon;
 }
 
-template <class Data>
-void AVLNode<Data>::setRightSon(AVLNode *rightSon) {
+void AVLNode::setRightSon(AVLNode *rightSon) {
     AVLNode::rightSon = rightSon;
 }
 
-template <class  Data>
-AVLNode<Data>* AVLNode<Data>::getLeftSon() const {
+AVLNode *AVLNode::getLeftSon() const {
     return leftSon;
 }
 
-template <class  Data>
-void AVLNode<Data>::setLeftSon(AVLNode *leftSon) {
+void AVLNode::setLeftSon(AVLNode *leftSon) {
     AVLNode::leftSon = leftSon;
 }
 
-template <class Data>
-Data* AVLNode<Data>::getCurrentData() const {
-    return currentData;
+int AVLNode::getNodeHeight() const {
+    return nodeHeight;
 }
 
-template<class Data>
-int AVLNode<Data>::getNodeHeight() const {
-    return nodeHeight;
+void AVLNode::setNodeHeight(int nodeHeight) {
+    AVLNode::nodeHeight = nodeHeight;
 }

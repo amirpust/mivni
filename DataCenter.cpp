@@ -38,3 +38,34 @@ int DataCenter::getLinuxServerNumber() const {
 int DataCenter::getWindowsServerNumber() const {
     return WindowsServerNumber;
 }
+
+void DataCenter::initializeListAndPointerArray() {
+    auto firstServer = new Server(0); //TODO: OOM throw
+    firstServer->setPrevious(linuxListHead);
+    firstServer->setNext(linuxListEnd);
+    pointerArray[0]=firstServer;
+    for (int i = 1; i < numberOfServers; ++i) {
+        auto temp = new  Server(i);
+        pointerArray[i-1]->setNext(temp);
+        pointerArray[i] = temp;
+        temp->setNext(linuxListEnd);
+        temp->setPrevious(pointerArray[i-1]);
+    }
+    linuxListEnd->setPrevious(pointerArray[numberOfServers-1]);
+}
+
+const bool DataCenter::operator==(const int key) const {
+    return this->getDataCenterId() == key;
+}
+
+const bool DataCenter::operator>(const int key) const {
+    return this->getDataCenterId() > key;
+}
+
+const bool DataCenter::operator==(const DataCenter &dataCenter) const {
+    return this->getDataCenterId() == dataCenter.getDataCenterId();
+}
+
+const bool DataCenter::operator>(const DataCenter &dataCenter) const {
+    return this->getDataCenterId() > dataCenter.getDataCenterId();
+}
