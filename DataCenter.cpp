@@ -12,7 +12,7 @@ DataCenter::DataCenter(int dataCenterId, int numberOfServers)
 
     linuxListEnd = new Server(-1);
     linuxListHead = new Server(-2,linuxListEnd);//TODO: check if we can remove magic numbers
-
+    linuxListEnd->setPrevious(linuxListHead);
 
     windowsListEnd = new Server(-3);
     windowsListHead = new Server(-4,windowsListEnd);

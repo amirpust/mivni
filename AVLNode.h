@@ -15,6 +15,7 @@ private:
     AVLNode *rightSon;
     AVLNode *leftSon;
     DataCenter *currentFarm;
+    int nodeHight;
 
 public:
     explicit AVLNode(DataCenter *currentFarmNode, AVLNode *fatherNode = nullptr
@@ -32,6 +33,9 @@ public:
 
     void setLeftSon(AVLNode *leftSon);
 
+    int getNodeHight() const;
+
+    void setNodeHight(int nodeHight);
 };
 
 #endif //_NODE_H
