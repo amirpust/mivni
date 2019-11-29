@@ -25,7 +25,8 @@ public:
 
 private:
     void initializeListAndPointerArray(){
-        pointerArray
+        Server* FirstServer = new Server(0);
+        pointerArray[]
     }
 };
 

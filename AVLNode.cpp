@@ -34,10 +34,10 @@ void AVLNode::setLeftSon(AVLNode *leftSon) {
     AVLNode::leftSon = leftSon;
 }
 
-int AVLNode::getNodeHight() const {
-    return nodeHight;
+int AVLNode::getnodeHeight() const {
+    return nodeHeight;
 }
 
-void AVLNode::setNodeHight(int nodeHight) {
-    AVLNode::nodeHight = nodeHight;
+void AVLNode::setnodeHeight(int nodeHeight) {
+    AVLNode::nodeHeight = nodeHeight;
 }
