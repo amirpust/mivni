@@ -85,62 +85,73 @@ void DataCenter::giveServer(int serverId, int *assignedServerId) {
     *assignedServerId = serverId;
 }
 
-void DataCenter::giveFreeServer(int serverId, int os, int *assignedServer) {
+bool DataCenter::giveFreeServer(int serverId, int os, int *assignedServer) {
     if(pointerArray[serverId]->getOs() == os){
         giveServer(serverId,assignedServer);
+        return false;
     }
     else{
         pointerArray[serverId]->setOs(os);
         giveServer(serverId,assignedServer);
         changeServerAmount(os);
+        return true;
     }
 }
 
-void DataCenter::giveDifferentServer(int os, int *assignedServerId) {
+bool DataCenter::giveDifferentServer(int os, int *assignedServerId) {
     if(os == WINDOWS){
         if(windowsListHead->getNext() != windowsListEnd){
             giveServer(windowsListHead->getNext()->getId(),assignedServerId);
+            return false;
         }
         else {
             linuxListHead->getNext()->setOs(os);
             giveServer(linuxListHead->getNext()->getId(),assignedServerId);
             changeServerAmount(os);
+            return true;
         }
     }
     else{
         if(linuxListHead->getNext()!=linuxListEnd){
             giveServer(linuxListHead->getNext()->getId(),assignedServerId);
-        } else{
+            return false;
+        }else{
             windowsListHead->getNext()->setOs(os);
             giveServer(windowsListHead->getNext()->getId(),assignedServerId);
             changeServerAmount(os);
+            return true;
         }
     }
 }
 
-ServerStatus DataCenter::requestServer(const int requestedId, const int os, int *assignedServerId) {
+DataCenterStatus DataCenter::requestServer(const int requestedId, const int os, int *assignedServerId) {
     if (unusedServers == 0)
-        return FAILURE; //no more servers
+        return FAILURE_DC; //no more servers
     if (requestedId >= numberOfServers || requestedId < 0 || os > 1 || os < 0
             || assignedServerId == NULL )
-        return INVALID_INPUT;
+        return INVALID_INPUT_DC;
     if (!pointerArray[requestedId]->isTaken()) {
-        giveFreeServer(requestedId,os,assignedServerId);
+        if(giveFreeServer(requestedId,os,assignedServerId)){
+            unusedServers--;
+            return SUCCESS_CHANGE_OS_DC;
+        }
         unusedServers--;
-        return SUCCESS; //success
+        return SUCCESS_DC; //success
     }
-    giveDifferentServer(os,assignedServerId);
+    if(giveDifferentServer(os,assignedServerId)){
+        unusedServers--;
+        return SUCCESS_CHANGE_OS_DC;
+    }
     unusedServers--;
-
-    return SUCCESS;
+    return SUCCESS_DC;
 }
 
-ServerStatus DataCenter::freeServer(int serverId) {
+DataCenterStatus DataCenter::freeServer(int serverId) {
     if (serverId >= numberOfServers || serverId < 0) {
-        return INVALID_INPUT;
+        return INVALID_INPUT_DC;
     }
     if (!pointerArray[serverId]->isTaken()) {
-        return FAILURE;
+        return FAILURE_DC;
     }
 
     pointerArray[serverId]->setTaken(false);
@@ -151,5 +162,17 @@ ServerStatus DataCenter::freeServer(int serverId) {
         pointerArray[serverId]->addServerToList(linuxListEnd, linuxListEnd->getPrevious());
     }
     unusedServers++;
-    return SUCCESS;
+    return SUCCESS_DC;
+}
+
+DataCenter::~DataCenter() {
+    for (int i = 0; i < numberOfServers; ++i) {
+        delete pointerArray[i];
+    }
+
+    delete pointerArray;
+    delete linuxListEnd;
+    delete linuxListHead;
+    delete windowsListEnd;
+    delete windowsListHead;
 }
