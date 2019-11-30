@@ -115,13 +115,62 @@ public:
     }
 
     //TODO: Jonathan (3) removeNode
+    /**
+     * remove just remove the node from the tree - *without deleting the data*
+     * for remove + delete data use destroy(dc);
+     * @param dc
+     */
     void remove(DataCenter* dc){
         assert(dc != nullptr);
         AVLNode* node = findNode(dc);
+        bool nodeIsRightSon = node->getFather()->getRightSon()==node;
+        if(node->getRightSon() == nullptr){
+            if(nodeIsRightSon)
+                node->getFather()->setRightSon(node->getLeftSon());
+            else
+                node->getFather()->setLeftSon(node->getLeftSon());
+            delete node;    //TODO: check that node D'tor does not delete DC
+            return;
+        }
+        AVLNode* updateFrom = nullptr;
+        AVLNode* replaceBy = findReplacement(node, updateFrom);
+        assert(updateFrom != nullptr);
 
+        //Sets the replacement sons
+        replaceBy->setRightSon(node->getRightSon());
+        replaceBy->setLeftSon(node->getLeftSon());
+
+        //set the father ti point on the replacement
+        if(nodeIsRightSon)
+            node->getFather()->setRightSon(replaceBy);
+        else
+            node->getFather()->setLeftSon(replaceBy);
+
+        updateTree(updateFrom);
     }
 
-    AVLNode* findClosestFromRight();
+    void destroy(DataCenter* dc){
+        remove(dc);
+        delete dc;
+    }
+    /**
+     * find a replacement for the node, and reap it from it's place.
+     * i.e. sets the replacements right son to its father as a left son
+     * === Does not change any other value ===
+     * @param node
+     * @return
+     */
+    AVLNode* findReplacement(const AVLNode* node, AVLNode*& updateFrom){
+        AVLNode* iterator = node->getRightSon();
+        assert(iterator != nullptr);
+        while(iterator->getLeftSon() != nullptr)
+            iterator = iterator->getLeftSon();
+
+        updateFrom = iterator->getFather();
+        iterator->getFather()->setLeftSon(iterator->getRightSon());
+
+        return iterator;
+    }
 
     //TODO: Jonathan (4) orders
     int** inOrder(){
@@ -166,7 +215,6 @@ private:
                         rollRL(updateFrom);
                     else
                         rollRR(updateFrom);
-
             }
             updateFrom = updateFrom->getFather();
         }
