@@ -2,10 +2,9 @@
 #define _DATACENTER_H
 
 #include "Server.h"
-
 typedef enum {
-    ALLOCATION_ERROR, INVALID_INPUT, FAILURE, SUCCESS
-} ServerStatus;
+    ALLOCATION_ERROR_DC, INVALID_INPUT_DC, FAILURE_DC, SUCCESS_CHANGE_OS_DC,SUCCESS_DC
+} DataCenterStatus;
 
 class DataCenter {
     int dataCenterID;
@@ -45,12 +44,13 @@ public:
      * @param os
      * @param assignedServerId
      * @return
-     * FAILURE - there are no more free servers to assign.
-     * INVALID_INPUT - if serverId >= number of servers or serverId < 0 or
+     * FAILURE_DC - there are no more free servers to assign.
+     * INVALID_INPUT_DC - if serverId >= number of servers or serverId < 0 or
      *                 OS < 0 or OS > 1 or assignedId = NULL
-     * SUCCESS - if succeeded
+     * SUCCESS_DC - if succeeded and os stayed the same
+     * SUCCESS_CHANGE_OS_DC - if succeeded and
      */
-    ServerStatus requestServer(const int requestedId, const int os, int *assignedServerId);
+    DataCenterStatus requestServer(const int requestedId, const int os, int *assignedServerId);
 
 
     /**
@@ -58,18 +58,35 @@ public:
      * free servers.
      * @param serverId
      * @return
-     * INVALID_INPUT - if serverId >= numOfServers or serverId < 0.
-     * FAILURE - if the server is already freed.
-     * SUCCESS - if succeeded
+     * INVALID_INPUT_DC - if serverId >= numOfServers or serverId < 0.
+     * FAILURE_DC - if the server is already freed.
+     * SUCCESS_DC - if succeeded
      */
-    ServerStatus freeServer(int serverId);
+    DataCenterStatus freeServer(int serverId);
+
+    virtual ~DataCenter();
 
 private:
     void initializeListAndPointerArray();
-
-    void giveDifferentServer(int os, int *assignedServerId);
-
-    void giveFreeServer(int serverId, int os, int *assignedServer);
+/**
+ *
+ * @param os
+ * @param assignedServerId
+ * @return
+ * true of os was changed
+ * false otherwise
+ */
+    bool giveDifferentServer(int os, int *assignedServerId);
+/**
+ *
+ * @param serverId
+ * @param os
+ * @param assignedServer
+ * @return
+ * true if os was changed
+ * false otherwise
+ */
+    bool giveFreeServer(int serverId, int os, int *assignedServer);
 
     void giveServer(int serverId, int *assignedServerId);
 
