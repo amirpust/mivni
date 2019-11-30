@@ -48,4 +48,4 @@ void AVLNode::setNodeHeight(int nodeHeight) {
     AVLNode::nodeHeight = nodeHeight;
 }
 
-AVLNode::~AVLNode() {}
+

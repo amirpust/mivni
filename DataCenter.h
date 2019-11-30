@@ -3,11 +3,16 @@
 
 #include "Server.h"
 
+typedef enum {
+    ALLOCATION_ERROR, INVALID_INPUT, FAILURE, SUCCESS
+} ServerStatus;
+
 class DataCenter {
     int dataCenterID;
     int numberOfServers;
     int linuxServerNumber;
     int windowsServerNumber;
+    int unusedServers;
     Server **pointerArray;
     Server *linuxListHead;
     Server *linuxListEnd;
@@ -32,50 +37,43 @@ public:
     const bool operator>(const int key) const;
 
     const bool operator==(const int key) const;
+    /**
+     * This function decides if the server is free, if so it assigns it with the
+     * compatible OS system.
+     * Otherwise it assigns a different server than requested.
+     * @param requestedId
+     * @param os
+     * @param assignedServerId
+     * @return
+     * FAILURE - there are no more free servers to assign.
+     * INVALID_INPUT - if serverId >= number of servers or serverId < 0 or
+     *                 OS < 0 or OS > 1 or assignedId = NULL
+     * SUCCESS - if succeeded
+     */
+    ServerStatus requestServer(const int requestedId, const int os, int *assignedServerId);
 
-    //TODO: check return value
-    const int requestServer(const int serverId, const int os, int *assignedServerId) {
-        if(linuxServerNumber + windowsServerNumber == numberOfServers)
-            return -1; //no more servers
-        if (serverId > numberOfServers || pointerArray[serverId]->isTaken()) {
-            getServerByOs(os,assignedServerId);
-            return 1; //success
-        }
 
-        pointerArray[serverId]->setTaken(true);
-        pointerArray[serverId]->removeServerFromList();
-        *assignedServerId = serverId;
-        return 1;
-    }
+    /**
+     *frees a given server and returns it to the end of the priority list of
+     * free servers.
+     * @param serverId
+     * @return
+     * INVALID_INPUT - if serverId >= numOfServers or serverId < 0.
+     * FAILURE - if the server is already freed.
+     * SUCCESS - if succeeded
+     */
+    ServerStatus freeServer(int serverId);
 
 private:
     void initializeListAndPointerArray();
 
+    void giveDifferentServer(int os, int *assignedServerId);
 
-    //checks if a server is available if not it assigns a compatible one
-    void getServerByOs(int os, int *assignedServerId) {
-        if (os && windowsListHead->getNext() != windowsListEnd) {
-            assignServer(assignedServerId,windowsListHead->getNext()->getId());
-        } else if (os) {
-            assignServer(assignedServerId,linuxListHead->getNext()->getId());
-            pointerArray[linuxListHead->getNext()->getId()]->setOs(os);
-            linuxServerNumber--;
-            windowsServerNumber++;
-        } else if(linuxListHead->getNext() != linuxListEnd){
-            assignServer(assignedServerId,linuxListHead->getNext()->getId());
-        }else {
-            assignServer(assignedServerId,windowsListHead->getNext()->getId());
-            pointerArray[windowsListHead->getNext()->getId()]->setOs(os);
-            linuxServerNumber++;
-            windowsServerNumber++;
-        }
-    }
+    void giveFreeServer(int serverId, int os, int *assignedServer);
 
-    void assignServer(int* assignedServerId, int serverId){
-        pointerArray[serverId]->setTaken(true);
-        pointerArray[serverId]->removeServerFromList();
-        *assignedServerId = serverId;
-    }
+    void giveServer(int serverId, int *assignedServerId);
+
+    void changeServerAmount(int os);
 };
 
 
