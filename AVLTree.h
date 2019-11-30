@@ -42,7 +42,6 @@ public:
             assert(father->getRightSon() == nullptr);
             father->setRightSon(newNode);
         }
-
         updateTree(father);
     }
 
@@ -60,7 +59,6 @@ public:
             *son = leftSon;
             return root;
         }
-
 
         while(temp != nullptr){
             if(compare(temp->getCurrentDataCenter(),dc) == 0){
@@ -118,13 +116,23 @@ public:
 
     //TODO: Jonathan (3) removeNode
     void remove(DataCenter* dc){
-        assert(dc == nullptr);
+        assert(dc != nullptr);
         AVLNode* node = findNode(dc);
 
     }
 
     AVLNode* findClosestFromRight();
 
+    //TODO: Jonathan (4) orders
+    int** inOrder(){
+
+    }
+    int** postOrder(){
+
+    }
+    int** preOrder(){
+
+    }
 protected:
     /**
      * Virtual function (to be override) which compare between 2 Dc's
@@ -173,7 +181,31 @@ private:
         temp->setRightSon(nodeToRoll);
     }
 
-    void rollRL(AVLNode* nodeToRoll);
+    /** picture better than thousand words... so...
+     *  Tree before:
+     *                  nodeToRoll
+     *      nodeToRoll(l)               A
+     *                          B           A(r)
+     *                     B(l)     B(r)
+     *
+     *   Tree after:
+     *                           B
+     *       NodeToRoll                     A
+     *                  B(l)          B(r)      A(r)
+     *
+     * @param nodeToRoll
+     */
+    void rollRL(AVLNode* nodeToRoll){
+        assert(nodeToRoll != nullptr);
+        AVLNode* tempA = nodeToRoll->getRightSon();
+        AVLNode* tempB = tempA->getLeftSon();
+
+        nodeToRoll->setRightSon(tempB->getLeftSon());
+        tempA->setLeftSon(tempB->getRightSon());
+
+        tempB->setRightSon(tempA);
+        tempB->setLeftSon(nodeToRoll);
+    }
     void rollLR(AVLNode* nodeToRoll);
 };
 
