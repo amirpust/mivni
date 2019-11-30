@@ -12,6 +12,7 @@ private:
     AVLNode *rightSon;
     AVLNode *leftSon;
     int nodeHeight;
+    int bf;
 
 public:
     AVLNode(DataCenter *currentDataCenter, AVLNode *father = nullptr
@@ -36,9 +37,16 @@ public:
 
     AVLNode *getLeftSon() const;
 
-    void setLeftSon(AVLNode *leftSon);
+    int getBf() const;
+
+    void setLeftSon(AVLNode* leftSon);
+
+    bool updateHeightsAndBF();
 
     virtual ~AVLNode() = default;
+
+private:
+    int getSonHeight(AVLNode* son);
 };
 
-#endif //_NODE_H
+#endif //_static static static NODE_H

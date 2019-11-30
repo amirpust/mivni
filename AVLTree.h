@@ -1,10 +1,18 @@
 #ifndef _AVLTREE_H
 #define _AVLTREE_H
 
+#include <cassert>
 #include "AVLNode.h"
 
-//TODO: Jonathan (3) removeNode
-
+//TODO: write what the enum is for
+/**
+ *
+ */
+typedef enum{
+    leftSon = -1,
+    tempSon = 0,
+    rightSon = 1
+}Sons;
 
 class AVLTree {
     //Dummy Root - the left son is the real first node
@@ -18,40 +26,65 @@ public:
         delete root;
     };
 
-    void insert(DataCenter* dc){//TODO: Jonathan (2)
+    void insert(DataCenter* dc){
+        Sons son;
+        AVLNode* father = findFather(dc, &son);
 
+        assert( father != nullptr);
+        AVLNode* newNode = new AVLNode(dc,father);
+
+
+        if(son == leftSon){
+            assert(father->getLeftSon() == nullptr);
+            father->setLeftSon(newNode);
+        }
+        if(son == rightSon){
+            assert(father->getRightSon() == nullptr);
+            father->setRightSon(newNode);
+        }
+
+        updateTree(father);
     }
 
     /**
      * Find the legitimate father of the dc.
      * Used mainly to find a place to a new node.
      * @param dc the
-     * @param isRight a bool ptr that hold "returns" values
-     * true if the son's place is from the right of the father
-     * false if the son's place is from the left of the father
+     * @param son is an int ptr that holds where the son needs to be.
      * @return
+     * The AVLNode to the father
      */
-    AVLNode* findfather(DataCenter* dc, bool* isRight){
+    AVLNode* findFather(DataCenter* dc, Sons* son){
         AVLNode* temp = root->getLeftSon();
+        if(temp == nullptr){
+            *son = leftSon;
+            return root;
+        }
+
+
         while(temp != nullptr){
-            if(compare(temp->getCurrentDataCenter(),dc) == 0)
-                return nullptr;//Happened only if the dc already exists TODO: Jonathan (1) keep think
+            if(compare(temp->getCurrentDataCenter(),dc) == 0){
+                *son = tempSon;
+                return nullptr; //Happened only if the dc already exists
+            }
             if(compare(dc, temp->getCurrentDataCenter()) > 0){
                 if(temp->getRightSon() == nullptr){
-                    *isRight = true;
+                    *son = rightSon;
                     return temp;
                 }
                 temp = temp->getRightSon();
             }
             else{
                 if(temp->getLeftSon() == nullptr){
-                    *isRight = false;
+                    *son = leftSon;
                     return temp;
                 }
                 temp = temp->getLeftSon();
             }
         }
+        return nullptr; //Shouldn't reach here
     }
+
     /** Read:
  * Inside every DC there is a ptr to the node, this function will be used
  * only in case we need to find the real DC by a dummy that carries the same id.    *
@@ -83,6 +116,14 @@ public:
         return nullptr;
     }
 
+    //TODO: Jonathan (3) removeNode
+    void remove(DataCenter* dc){
+        assert(dc == nullptr);
+        AVLNode* node = findNode(dc);
+
+    }
+
+    AVLNode* findClosestFromRight();
 
 protected:
     /**
@@ -103,11 +144,37 @@ private:
      *
      * @param updateFrom
      */
-    void updateTree(AVLNode updateFrom);
-    void rollRR(AVLNode nodeToRoll);
-    void rollLL(AVLNode nodeToRoll);
-    void rollRL(AVLNode nodeToRoll);
-    void rollLR(AVLNode nodeToRoll);
+    void updateTree(AVLNode* updateFrom){
+        while(updateFrom != root && updateFrom->updateHeightsAndBF()){
+            int bf = updateFrom->getBf();
+            if(bf < -1 || bf > 1){
+                if(bf > 0)
+                    if(updateFrom->getLeftSon()->getBf() == -1)
+                        rollLR(updateFrom);
+                    else
+                        rollLL(updateFrom);
+                else
+                    if(updateFrom->getRightSon()->getBf() == 1)
+                        rollRL(updateFrom);
+                    else
+                        rollRR(updateFrom);
+
+            }
+            updateFrom = updateFrom->getFather();
+        }
+    }
+
+    void rollRR(AVLNode* nodeToRoll);
+    void rollLL(AVLNode* nodeToRoll){
+        assert(nodeToRoll != nullptr);
+
+        AVLNode* temp = nodeToRoll->getLeftSon();
+        nodeToRoll->setLeftSon(temp->getRightSon());
+        temp->setRightSon(nodeToRoll);
+    }
+
+    void rollRL(AVLNode* nodeToRoll);
+    void rollLR(AVLNode* nodeToRoll);
 };
 
 
