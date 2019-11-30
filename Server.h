@@ -1,5 +1,5 @@
-#ifndef MIVNI_SERVER_H
-#define MIVNI_SERVER_H
+#ifndef _SERVER_H
+#define _SERVER_H
 
 #include <cstdio>
 
@@ -83,4 +83,4 @@ private:
 };
 
 
-#endif //MIVNI_SERVER_H
+#endif //_SERVER_H
