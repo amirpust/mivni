@@ -93,8 +93,7 @@ public:
      *                 or OS isn't in range.
      * FAILURE - dataCenterID doesn't exist
      *           or all servers are taken
-     *           or
-     *
+     * SUCCESS - all succeeded
      */
     DataStructureStatus requestServerFromDataCenter(int dataCenterId, int serverID
             , int os, int *assignedID) {
