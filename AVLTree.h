@@ -221,8 +221,13 @@ private:
     }
 
 
-    //TODO: Amir - enjoy
-    void rollRR(AVLNode* nodeToRoll);
+    static void rollRR(AVLNode* nodeToRoll){
+        assert(nodeToRoll != nullptr);
+
+        AVLNode* temp = nodeToRoll->getRightSon();
+        nodeToRoll->setRightSon(temp->getLeftSon());
+        temp->setLeftSon(nodeToRoll);
+    }
     static void rollLL(AVLNode* nodeToRoll){
         assert(nodeToRoll != nullptr);
 
@@ -256,8 +261,19 @@ private:
         tempB->setRightSon(tempA);
         tempB->setLeftSon(nodeToRoll);
     }
-    //TODO: Amir - enjoy
-    void rollLR(AVLNode* nodeToRoll);
+
+    static void rollLR(AVLNode* nodeToRoll){
+        assert(nodeToRoll != nullptr);
+
+        AVLNode* tempA = nodeToRoll->getLeftSon();
+        AVLNode* tempB = tempA->getRightSon();
+
+        tempA->setRightSon(tempB->getLeftSon());
+        tempB->setLeftSon(tempA);
+
+        nodeToRoll->setLeftSon(tempB->getRightSon());
+        tempB->setRightSon(nodeToRoll);
+    }
 };
 
 

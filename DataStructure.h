@@ -30,13 +30,14 @@ public:
  * FAILURE - if dataCenterID already exist
  * SUCCESS - if succeeded
  */
+
     DataStructureStatus addDataCenter(int dataCenterId, int numOfServers) {
         if (numOfServers <= 0 || dataCenterId <= 0)
             return INVALID_INPUT;
 
         auto dummyDataCenter = new DataCenter(dataCenterId, numOfServers);
 
-        if (idTree->findNode(dummyDataCenter) != nullptr) {
+        if (idTree->findDataCenter(dummyDataCenter) != nullptr) {
             delete dummyDataCenter;
             return FAILURE;
         }
@@ -65,7 +66,7 @@ public:
 
         auto dummyDataCenter = new DataCenter(dataCenterID, 0);
 
-        if (idTree->findNode(dummyDataCenter) == nullptr) {
+        if (idTree->findDataCenter(dummyDataCenter) == nullptr) {
             delete dummyDataCenter;
             return FAILURE;
         }
