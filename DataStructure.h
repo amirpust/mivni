@@ -18,6 +18,8 @@ class DataStructure {
 public:
     DataStructure();
 
+    virtual ~DataStructure();
+
 //TODO check allocation problem with catch throw
 //TODO wrote new
 /**
@@ -30,7 +32,6 @@ public:
  * FAILURE - if dataCenterID already exist
  * SUCCESS - if succeeded
  */
-
     DataStructureStatus addDataCenter(int dataCenterId, int numOfServers) {
         if (numOfServers <= 0 || dataCenterId <= 0)
             return INVALID_INPUT;
@@ -48,7 +49,6 @@ public:
 
         return SUCCESS;
     }
-
 
     /**
      *
@@ -79,9 +79,7 @@ public:
         return SUCCESS;
     }
 
-
     /**
-     *
      * @param dataCenterId
      * @param serverID
      * @param os
@@ -149,6 +147,28 @@ public:
         return SUCCESS;
     }
 
+    // I think this is too complicated and i will have to change it when we will
+    //make the tree generic
+
+    DataStructureStatus removeDataCenetr(int dataCenterID){
+        if (dataCenterID <= 0)
+            return INVALID_INPUT;
+
+        DataCenter* dummy = new DataCenter(dataCenterID,0);
+        DataCenter* result = idTree->findDataCenter(dummy);
+        delete dummy;
+
+        if (result == nullptr){
+
+            return  FAILURE;
+        }
+
+        idTree->destroy(result);
+        windowsTree->destroy(result);
+        linuxTree->destroy(result);
+        return SUCCESS;
+
+    }
 
 };
 

@@ -5,3 +5,9 @@ DataStructure::DataStructure() {
     windowsTree = new AVLTreeByWindows;
     linuxTree = new AVLTreeByLinux;
 }
+
+DataStructure::~DataStructure() {
+    delete idTree;
+    delete windowsTree;
+    delete linuxTree;
+}
