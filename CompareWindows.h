@@ -10,11 +10,11 @@ public:
         int result = dataCenter1->getwindowsServerNumber() - dataCenter2->getwindowsServerNumber();
         if (result)
             return result;
-        return dataCenter1->getDataCenterId() - dataCenter2->getDataCenterId();
+        return dataCenter2->getDataCenterId()- dataCenter1->getDataCenterId();
     }
 
     int operator()(DataCenter* dataCenter,int key){
-
+        return dataCenter->getDataCenterId()- key;
     }
 };
 
