@@ -42,17 +42,16 @@ public:
             return FAILURE;
         }
 
-        shared_ptr<DataCenter> currentData = make_shared<DataCenter>(new DataCenter(dataCenterId, numOfServers));
+        auto currentData = new DataCenter(dataCenterId, numOfServers);
 
-        idTree->insert(&currentData);
-        linuxTree->insert(&currentData);
-        windowsTree->insert(dummyDataCenter);
+        idTree->insert(currentData);
+        linuxTree->insert(currentData);
+        windowsTree->insert(currentData);
 
         return SUCCESS;
     }
 
     /**
-     *
      * @param dataCenterID
      * @return
      * INVALID_INPUT - if dataCenterID <= 0.
@@ -65,17 +64,14 @@ public:
         if (dataCenterID <= 0)
             return INVALID_INPUT;
 
-        auto dummyDataCenter = new DataCenter(dataCenterID, 0);
 
-        if (idTree->findDataCenter(dummyDataCenter) == nullptr) {
-            delete dummyDataCenter;
+        if (idTree->findData(dataCenterID) == nullptr) {
             return FAILURE;
         }
 
-        idTree->remove(dummyDataCenter);
-        windowsTree->remove(dummyDataCenter);
-        linuxTree->remove(dummyDataCenter);
-        delete dummyDataCenter;
+        windowsTree->remove(dataCenterID);
+        linuxTree->remove(dataCenterID);
+        idTree->remove(dataCenterID);
 
         return SUCCESS;
     }
@@ -100,9 +96,8 @@ public:
             || os < LINUX || os > WINDOWS)
             return INVALID_INPUT;
 
-        auto dummyDataCenter = new DataCenter(dataCenterId, 0);
-        auto currentDataCenter = idTree->findDataCenter(dummyDataCenter);
-        delete dummyDataCenter;
+        auto currentDataCenter = idTree->findData(dataCenterId);
+
 
         if (currentDataCenter == nullptr)
             return FAILURE;
@@ -116,9 +111,9 @@ public:
             return INVALID_INPUT;
 
         if (result == SUCCESS_CHANGE_OS_DC) {
-            windowsTree->remove(currentDataCenter);
+            windowsTree->remove(dataCenterId);
             windowsTree->insert(currentDataCenter);
-            linuxTree->remove(currentDataCenter);
+            linuxTree->remove(dataCenterId);
             linuxTree->insert(currentDataCenter);
         }
 
@@ -129,9 +124,7 @@ public:
         if (serverID < 0 || dataCenterID <= 0)
             return INVALID_INPUT;
 
-        auto dummyDataCenter = new DataCenter(dataCenterID, 0);
-        auto currentDataCenter = idTree->findDataCenter(dummyDataCenter);
-        delete dummyDataCenter;
+        auto currentDataCenter = idTree->findData(dataCenterID);
 
         if (currentDataCenter == nullptr)
             return FAILURE;
@@ -145,26 +138,6 @@ public:
             return FAILURE;
 
         return SUCCESS;
-    }
-
-    DataStructureStatus removeDataCenetr(int dataCenterID) {
-        if (dataCenterID <= 0)
-            return INVALID_INPUT;
-
-        DataCenter *dummy = new DataCenter(dataCenterID, 0);
-        DataCenter *result = idTree->findDataCenter(dummy);
-        delete dummy;
-
-        if (result == nullptr) {
-
-            return FAILURE;
-        }
-
-        idTree->destroy(result);
-        windowsTree->destroy(result);
-        linuxTree->destroy(result);
-        return SUCCESS;
-
     }
 
 };
