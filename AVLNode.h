@@ -19,7 +19,7 @@ private:
 public:
 
     explicit AVLNode(Data *currentData, AVLNode<Data> *father = nullptr, AVLNode<Data> *rightSon  = nullptr
-            , AVLNode<Data> *leftSon = nullptr, int nodeHeight = -1, int bf = 0) :
+            , AVLNode<Data> *leftSon = nullptr, int nodeHeight = 0, int bf = 0) :
             currentData(currentData), father(father), rightSon(rightSon), leftSon(leftSon), nodeHeight(nodeHeight),
                                                                                   bf(bf){};
 
@@ -37,7 +37,7 @@ public:
         int rightSonHeight = getSonHeight(rightSon);
         int leftSonHeight = getSonHeight(leftSon);
         bf = leftSonHeight - rightSonHeight;
-        if(nodeHeight != (int)fmax(rightSonHeight, leftSonHeight) + 1){
+        if(nodeHeight != ((int)fmax(rightSonHeight, leftSonHeight) + 1)){
             nodeHeight =  (int)fmax(rightSonHeight, leftSonHeight) + 1;
             return true;
         }
