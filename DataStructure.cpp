@@ -1,9 +1,26 @@
 #include "DataStructure.h"
 
 DataStructure::DataStructure() {
-    idTree = new AVLTree<DataCenter,int,CompareID>(true);
-    linuxTree = new AVLTree<DataCenter,int,CompareLinux>();
-    windowsTree = new AVLTree<DataCenter,int,CompareWindows>();
+    try {
+        idTree = new AVLTree<DataCenter,int,CompareID>(true);
+    }catch (exception& e){
+        throw OutOfMemory();
+    }
+    try {
+        linuxTree = new AVLTree<DataCenter,int,CompareLinux>();
+    }catch (exception& e){
+        delete idTree;
+        throw OutOfMemory();
+    }
+
+    try {
+        windowsTree = new AVLTree<DataCenter,int,CompareWindows>();
+    }catch (exception& e){
+        delete idTree;
+        delete linuxTree;
+        throw OutOfMemory();
+    }
+
 }
 
 DataStructure::~DataStructure() {
