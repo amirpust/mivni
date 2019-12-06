@@ -5,10 +5,10 @@
 #include "Server.h"
 #include "DataCenter.h"
 
-template <class data>
+template <class Data>
 class AVLNode {
 private:
-    data *currentData;
+    Data *currentData;
     AVLNode *father;
     AVLNode *rightSon;
     AVLNode *leftSon;
@@ -17,10 +17,10 @@ private:
 
 public:
 
-    AVLNode(data *currentData, AVLNode *father, AVLNode *rightSon
+    AVLNode(Data *currentData, AVLNode *father, AVLNode *rightSon
             , AVLNode *leftSon, int nodeHeight, int bf);
 
-    data *getCurrentData() const;
+    Data *getCurrentData() const;
 
     bool updateHeightsAndBF();
 
@@ -36,7 +36,7 @@ public:
 
     int getBf() const;
 
-    void setCurrentData(data *currentData);
+    void setCurrentData(Data *currentData);
 
     void setFather(AVLNode *father);
 
