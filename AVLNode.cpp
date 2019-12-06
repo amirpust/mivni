@@ -23,7 +23,7 @@ bool AVLNode<Data>::updateHeightsAndBF(){
 
 
 template<class Data>
-AVLNode<Data>::AVLNode(Data *currentData, AVLNode *father, AVLNode *rightSon, AVLNode *leftSon, int nodeHeight, int bf)
+AVLNode<Data>::AVLNode(Data *currentData, AVLNode<Data> *father, AVLNode<Data> *rightSon, AVLNode<Data> *leftSon, int nodeHeight, int bf)
         :currentData(currentData), father(father), rightSon(rightSon), leftSon(leftSon), nodeHeight(nodeHeight),
          bf(bf) {}
 
@@ -59,36 +59,36 @@ int AVLNode<Data>::getBf() const {
 
 template<class Data>
 void AVLNode<Data>::setCurrentData(Data *currentData) {
-    AVLNode::currentData = currentData;
+    AVLNode<Data>::currentData = currentData;
 }
 
 template<class Data>
 void AVLNode<Data>::setFather(AVLNode *father) {
-    AVLNode::father = father;
+    AVLNode<Data>::father = father;
 }
 
 template<class Data>
 void AVLNode<Data>::setRightSon(AVLNode *rightSon) {
-    AVLNode::rightSon = rightSon;
+    AVLNode<Data>::rightSon = rightSon;
     if(rightSon != nullptr)
         rightSon->setFather(this);
 }
 
 template<class Data>
 void AVLNode<Data>::setLeftSon(AVLNode *leftSon) {
-    AVLNode::leftSon = leftSon;
+    AVLNode<Data>::leftSon = leftSon;
     if(leftSon != nullptr)
         leftSon->setFather(this);
 }
 
 template<class Data>
 void AVLNode<Data>::setNodeHeight(int nodeHeight) {
-    AVLNode::nodeHeight = nodeHeight;
+    AVLNode<Data>::nodeHeight = nodeHeight;
 }
 
 template<class Data>
 void AVLNode<Data>::setBf(int bf) {
-    AVLNode::bf = bf;
+    AVLNode<Data>::bf = bf;
 }
 
 template<class Data>

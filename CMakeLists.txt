@@ -3,5 +3,4 @@ project(mivni)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(mivni main.cpp AvlNode.cpp AvlNode.h
-        DataCenter.cpp DataCenter.h Server.h Server.cpp AVLTree.cpp AVLTree.h DataStructure.cpp DataStructure.h AVLTreeById.h AVLTreeByWindows.cpp AVLTreeByWindows.h AVLTreeByLinux.h CompareLinux.cpp CompareLinux.h CompareWindows.cpp CompareWindows.h CompareID.cpp CompareID.h)
+add_executable(tests main.cpp AVLTree.h AVLTree.cpp AVLNode.h AVLNode.cpp)

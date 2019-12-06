@@ -9,16 +9,16 @@ template <class Data>
 class AVLNode {
 private:
     Data *currentData;
-    AVLNode *father;
-    AVLNode *rightSon;
-    AVLNode *leftSon;
+    AVLNode<Data> *father;
+    AVLNode<Data> *rightSon;
+    AVLNode<Data> *leftSon;
     int nodeHeight;
     int bf;
 
 public:
 
-    AVLNode(Data *currentData, AVLNode *father, AVLNode *rightSon
-            , AVLNode *leftSon, int nodeHeight, int bf);
+    explicit AVLNode(Data *currentData, AVLNode<Data> *father = nullptr, AVLNode<Data> *rightSon  = nullptr
+            , AVLNode<Data> *leftSon = nullptr, int nodeHeight = -1, int bf = 0);
 
     Data *getCurrentData() const;
 

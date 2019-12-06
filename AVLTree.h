@@ -2,7 +2,11 @@
 #define _AVLTREE_H
 
 #include <cassert>
+#include <iostream>
 #include "AVLNode.h"
+
+//TODO: For debugging
+using namespace std;
 
 //TODO: Jonathan for all the class - check for error returns && add consts where its possible
 
@@ -23,10 +27,12 @@ typedef enum{
  template <class Data, class Key, class Compare>
 class AVLTree {
     AVLNode<Data>* root;  //Dummy Root - the left son is the real first node
-
+    Compare compare;
+    bool isManagedMemory;
 public:
-    explicit AVLTree(){
+    explicit AVLTree(bool _isManagedMemory = false) : isManagedMemory(_isManagedMemory){
         root = new AVLNode<Data>(nullptr);
+        compare();
     };
     ~AVLTree(){
         removeAll(root->getLeftSon());
@@ -70,26 +76,34 @@ public:
         removeNode(node);
     }
 
+    //TODO: for debugging - delete before sub
+    void printInOrder(){
+
+    }
+
 private:
     /**
      * remove the tree which r is its root bt post order
      * @param r
      */
-    void removeAll(AVLNode<Data> r){
+    void removeAll(AVLNode<Data>* r){
         if(r == nullptr)
             return;
-        removeAll(r.getLeftSon());
-        removeAll(r.getRightSon());
+        removeAll(r->getLeftSon());
+        removeAll(r->getRightSon());
         removeNode(r);
     }
 
-    void removeNode(AVLNode<Data> node){
+    void removeNode(AVLNode<Data>* node){
         bool nodeIsRightSon = node->getFather()->getRightSon()==node;
         if(node->getRightSon() == nullptr){
             if(nodeIsRightSon)
                 node->getFather()->setRightSon(node->getLeftSon());
             else
                 node->getFather()->setLeftSon(node->getLeftSon());
+
+            if(isManagedMemory)
+                delete node->getCurrentData();
             delete node;
             return;
         }
@@ -107,11 +121,18 @@ private:
         else
             node->getFather()->setLeftSon(replaceBy);
 
+        if(isManagedMemory)
+            delete node->getCurrentData();
+
         updateTree(updateFrom);
     }
 
-    void printTreeInOrder(){
-
+    void printInOrderAux(AVLNode<Data> node){
+        if(node == nullptr)
+            return;
+        printInOrderAux(node.getLeftSon());
+        printInOrderAux(node.getRightSon());
+        cout << node.getCurrentData() << endl;
     }
 
     /** Read:
@@ -124,9 +145,9 @@ private:
     AVLNode<Data>* findNode(Key key){
         AVLNode<Data>* temp = root->getLeftSon();
         while(temp != nullptr){
-            if(Compare(temp->getCurrentData(),key) == 0)
+            if(compare(temp->getCurrentData(),key) == 0)
                 return temp;
-            if(Compare(key, temp->getCurrentData()) > 0)
+            if(compare(key, temp->getCurrentData()) > 0)
                 temp = temp->getRightSon();
             else
                 temp = temp->getLeftSon();
@@ -150,11 +171,11 @@ private:
         }
 
         while(temp != nullptr){
-            if(Compare(temp->getCurrentData(),data) == 0){
+            if(compare(temp->getCurrentData(),data) == 0){
                 *son = tempSon;
-                return nullptr; //Happened only if the data already exists
+                return nullptr; //TODO: Exception - already exists
             }
-            if(Compare(data, temp->getCurrentData()) > 0){
+            if(compare(data, temp->getCurrentData()) > 0){
                 if(temp->getRightSon() == nullptr){
                     *son = rightSon;
                     return temp;
