@@ -66,17 +66,17 @@ public:
         return bf;
     };
 
-    void setFather(AVLNode *father){
+    void setFather(AVLNode<Data> *father){
         AVLNode<Data>::father = father;
     };
 
-    void setRightSon(AVLNode *rightSon){
+    void setRightSon(AVLNode<Data> *rightSon){
         AVLNode<Data>::rightSon = rightSon;
         if(rightSon != nullptr)
             rightSon->setFather(this);
     };
 
-    void setLeftSon(AVLNode *leftSon){
+    void setLeftSon(AVLNode<Data> *leftSon){
         AVLNode<Data>::leftSon = leftSon;
         if(leftSon != nullptr)
             leftSon->setFather(this);
