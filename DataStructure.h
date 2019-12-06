@@ -131,6 +131,29 @@ public:
         return SUCCESS;
     }
 
+    StatusType getDataCentersByOs(int os, int **dataCenters,int* numOfDataCenters){
+        if(dataCenters == NULL || numOfDataCenters == NULL || os < 0 || os > 1){
+            return INVALID_INPUT;
+        }
+
+        try {
+            dataCenters = new int*[*numOfDataCenters];
+        }catch (exception& e){
+            return ALLOCATION_ERROR;
+        }
+        try {
+            if(os == WINDOWS){
+                windowsTree->getKeysInOrder(dataCenters,*numOfDataCenters);
+            }else{
+                linuxTree->getKeysInOrder(dataCenters,*numOfDataCenters);
+            }
+        }catch (DataStructureException& d){
+            return d.statusType;
+        }
+        return SUCCESS;
+
+    }
+
 };
 
 
