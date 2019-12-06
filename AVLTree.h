@@ -17,6 +17,8 @@ typedef enum{
 
 /** AVL Tree
  * To use this class, please send ad a template 2 classes.
+ * @tparam: Data - the data the tree will keep.
+ * operator* of Data will provide the key.
  * @tparam Compare - A function object that can Compare between 2 Data or
  * between Data to key
  *  positive number in case data1 > data2
@@ -96,7 +98,27 @@ public:
         printInOrderAux(root->getLeftSon());
     }
 
+    /**
+     *
+     * @param keys
+     * @param numOfKeys
+     * @throws DoesntExists - in case of empty tree
+     */
+    void getKeysInOrder(Key** keys, int numOfKeys){
+        int index = 0;
+        if(root->getLeftSon() == nullptr)
+            throw DoesntExists();
+        getKeysInOrderAux(keys, numOfKeys, index, root->getLeftSon());
+    }
+
 private:
+    void getKeysInOrderAux(Key** keys, int numOfKeys, int* index, AVLNode<Data> node){
+        if( *index >= numOfKeys || node == nullptr)
+            return;
+        GetKeysInOrderAux(node->getLeftSon());
+        keys[(*index)++] = *(node.getCurrentData());
+        GetKeysInOrderAux(node->getRightSon());
+    }
     /**
      * remove the tree which r is its root bt post order
      * @param r
