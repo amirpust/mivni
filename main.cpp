@@ -10,7 +10,7 @@ int main() {
 
     for(int i = 0; i < 20; ++i){
         int* ptr = (int*)malloc(sizeof(*ptr));
-        *ptr = 2*i;
+        *ptr = (100 - 11*i)%300;
         intTree.insert(ptr);
     }
     intTree.printInOrder();

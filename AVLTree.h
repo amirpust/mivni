@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include "AVLNode.h"
+#include "DataStractureExceptions.h"
 
 //TODO: For debugging
 using namespace std;
@@ -39,13 +40,28 @@ public:
         delete root;
     };
 
+    /**
+     *
+     * @param data
+     * @throws
+     * OutOfMemory
+     * AlreadyExists
+     * NullArg
+     */
     void insert(Data* data){
+        if(data == nullptr)
+            throw NullArg();
+
         Sons son;
         AVLNode<Data>* father = findFather(data, &son);
 
         assert( father != nullptr);
-        auto newNode = new AVLNode<Data>(data,father);
-
+        AVLNode<Data>* newNode;
+        try{
+            newNode = new AVLNode<Data>(data,father);
+        }catch(exception& e) {
+            throw OutOfMemory();
+        }
 
         if(son == leftSon){
             assert(father->getLeftSon() == nullptr);
@@ -75,6 +91,8 @@ public:
         assert(node != nullptr); //TODO: Exception Key do not exist
         removeNode(node);
     }
+
+
 
     //TODO: for debugging - delete before sub
     void printInOrder(){
@@ -127,11 +145,12 @@ private:
         updateTree(updateFrom);
     }
 
+    //TODO: for debugging
     void printInOrderAux(AVLNode<Data>* node){
         if(node == nullptr)
             return;
-        cout << *(node->getCurrentData()) << endl;
         printInOrderAux(node->getLeftSon());
+        cout << *(node->getCurrentData()) << endl;
         printInOrderAux(node->getRightSon());
 
     }
@@ -163,6 +182,8 @@ private:
  * @param son is an int ptr that holds where the son needs to be.
  * @return
  * The AVLNode to the father
+ * @throws
+ *  AlreadyExists
  */
     AVLNode<Data>* findFather(Data* data, Sons* son){
         AVLNode<Data>* temp = root->getLeftSon();
@@ -174,7 +195,7 @@ private:
         while(temp != nullptr){
             if(compare(temp->getCurrentData(),data) == 0){
                 *son = tempSon;
-                return nullptr; //TODO: Exception - already exists
+                throw AlreadyExists();
             }
             if(compare(data, temp->getCurrentData()) > 0){
                 if(temp->getRightSon() == nullptr){
@@ -191,7 +212,6 @@ private:
                 temp = temp->getLeftSon();
             }
         }
-        return nullptr; //Shouldn't reach here
     }
 
     /**findReplacement
@@ -254,12 +274,22 @@ private:
         nodeToRoll->updateHeightsAndBF();
         temp->updateHeightsAndBF();
     }
+
     static void rollLL(AVLNode<Data>* nodeToRoll){
         assert(nodeToRoll != nullptr);
+        bool isRightSon = nodeToRoll->getFather()->getRightSon() == nodeToRoll;
 
         AVLNode<Data>* temp = nodeToRoll->getLeftSon();
+        if(isRightSon)
+            nodeToRoll->getFather()->setRightSon(temp);
+        else
+            nodeToRoll->getFather()->setLeftSon(temp);
+
         nodeToRoll->setLeftSon(temp->getRightSon());
         temp->setRightSon(nodeToRoll);
+
+        nodeToRoll->updateHeightsAndBF();
+        temp->updateHeightsAndBF();
     }
     /** picture better than thousand words... so...
      *  Tree before:
@@ -277,26 +307,48 @@ private:
      */
     static void rollRL(AVLNode<Data>* nodeToRoll){
         assert(nodeToRoll != nullptr);
+        bool isRightSon = nodeToRoll->getFather()->getRightSon() == nodeToRoll;
+
         AVLNode<Data>* tempA = nodeToRoll->getRightSon();
         AVLNode<Data>* tempB = tempA->getLeftSon();
+
+        if(isRightSon)
+            nodeToRoll->getFather()->setRightSon(tempB);
+        else
+            nodeToRoll->getFather()->setLeftSon(tempB);
 
         nodeToRoll->setRightSon(tempB->getLeftSon());
         tempA->setLeftSon(tempB->getRightSon());
 
         tempB->setRightSon(tempA);
         tempB->setLeftSon(nodeToRoll);
+
+        nodeToRoll->updateHeightsAndBF();
+        tempA->updateHeightsAndBF();
+        tempB->updateHeightsAndBF();
     }
+
     static void rollLR(AVLNode<Data>* nodeToRoll){
         assert(nodeToRoll != nullptr);
+        bool isRightSon = nodeToRoll->getFather()->getRightSon() == nodeToRoll;
 
         AVLNode<Data>* tempA = nodeToRoll->getLeftSon();
         AVLNode<Data>* tempB = tempA->getRightSon();
+
+        if(isRightSon)
+            nodeToRoll->getFather()->setRightSon(tempB);
+        else
+            nodeToRoll->getFather()->setLeftSon(tempB);
 
         tempA->setRightSon(tempB->getLeftSon());
         tempB->setLeftSon(tempA);
 
         nodeToRoll->setLeftSon(tempB->getRightSon());
         tempB->setRightSon(nodeToRoll);
+
+        nodeToRoll->updateHeightsAndBF();
+        tempA->updateHeightsAndBF();
+        tempB->updateHeightsAndBF();
     }
 };
 
