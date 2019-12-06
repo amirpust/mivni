@@ -147,9 +147,6 @@ public:
         return SUCCESS;
     }
 
-    // I think this is too complicated and i will have to change it when we will
-    //make the tree generic
-
     DataStructureStatus removeDataCenetr(int dataCenterID){
         if (dataCenterID <= 0)
             return INVALID_INPUT;

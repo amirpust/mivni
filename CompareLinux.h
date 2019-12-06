@@ -14,12 +14,12 @@ public:
      * If equal .
      * Negative int otherwise.
      */
-    int operator()(DataCenter* dataCenter1,DataCenter* dataCenter2)const {
+    int operator()(DataCenter *dataCenter1, DataCenter *dataCenter2) const {
         int result = dataCenter1->getLinuxServerNumber()
-                                - dataCenter2->getLinuxServerNumber();
-        if(result)
+                     - dataCenter2->getLinuxServerNumber();
+        if (result)
             return result;
-        return dataCenter1->getDataCenterId()-dataCenter2->getDataCenterId();
+        return dataCenter2->getDataCenterId() - dataCenter1->getDataCenterId();
     }
 
 
@@ -31,7 +31,7 @@ public:
      * 0 - if they are equal.
      * Negative int otherwise.
      */
-    int operator()(DataCenter* dataCenter,int key){
+    int operator()(DataCenter *dataCenter, int key) {
         return dataCenter->getDataCenterId() - key;
     }
 };

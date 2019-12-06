@@ -9,6 +9,10 @@ public:
     int operator()(DataCenter *dataCenter, int key) {
         return dataCenter->getDataCenterId() - key;
     }
+
+    int operator()(DataCenter *dataCenter1, DataCenter *dataCenter2) {
+        return dataCenter1->getDataCenterId() - dataCenter2->getDataCenterId();
+    }
 };
 
 
