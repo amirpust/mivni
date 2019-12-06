@@ -9,8 +9,6 @@
 //TODO: For debugging
 using namespace std;
 
-//TODO: Jonathan for all the class - check for error returns && add consts where its possible
-
 typedef enum{
     leftSon = -1,
     tempSon = 0,

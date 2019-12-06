@@ -28,13 +28,9 @@ typedef enum {
 } StatusType;
 
 //we have to do catch and throw
-void *Init(){
+void *Init();
 
-};
-
-StatusType AddDataCenter(void *DS, int dataCenterID, int numOfServers){
-
-};
+StatusType AddDataCenter(void *DS, int dataCenterID, int numOfServers);
 
 StatusType RemoveDataCenter(void *DS, int dataCenterID);
 
