@@ -33,7 +33,6 @@ class AVLTree {
 public:
     explicit AVLTree(bool _isManagedMemory = false) : isManagedMemory(_isManagedMemory){
         root = new AVLNode<Data>(nullptr);
-        //compare();
     };
     ~AVLTree(){
         removeAll(root->getLeftSon());
@@ -43,10 +42,9 @@ public:
     /**
      *
      * @param data
-     * @throws
-     * OutOfMemory
-     * AlreadyExists
-     * NullArg
+     * @throws OutOfMemory
+     * @throws AlreadyExists
+     * @throws NullArg
      */
     void insert(Data* data){
         if(data == nullptr)
@@ -77,6 +75,7 @@ public:
     /**
      * @param Key
      * @return Pointer to the data connected to this key
+     * @throws DoesntExists
      */
     Data* findData(Key key){
         return findNode(key)->getCurrentData();
@@ -85,10 +84,10 @@ public:
     /**
      * remove just remove the node from the tree - *without deleting the Data*
      * @param Key
+     * @throws DoesntExists
      */
     void remove(Key key){
         AVLNode<Data>* node = findNode(key);
-        assert(node != nullptr); //TODO: Exception Key do not exist
         removeNode(node);
     }
 
@@ -161,6 +160,7 @@ private:
  * @param data - dummy data that helps us find the real data through the right
  * Compare function
  * @return AVLNode* of the Node that has the data or nullptr in case the data do not exists.
+ * @throws DoesntExists
  */
     AVLNode<Data>* findNode(Key key){
         AVLNode<Data>* temp = root->getLeftSon();
@@ -172,7 +172,7 @@ private:
             else
                 temp = temp->getLeftSon();
         }
-        return nullptr;
+        throw DoesntExists();
     }
 
     /**
