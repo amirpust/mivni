@@ -22,10 +22,7 @@ bool AVLNode<Data>::updateHeightsAndBF(){
 }
 
 
-template<class Data>
-AVLNode<Data>::AVLNode(Data *currentData, AVLNode<Data> *father, AVLNode<Data> *rightSon, AVLNode<Data> *leftSon, int nodeHeight, int bf)
-        :currentData(currentData), father(father), rightSon(rightSon), leftSon(leftSon), nodeHeight(nodeHeight),
-         bf(bf) {}
+
 
 template<class Data>
 Data *AVLNode<Data>::getCurrentData() const {
@@ -42,10 +39,6 @@ AVLNode<Data> *AVLNode<Data>::getRightSon() const {
     return rightSon;
 }
 
-template<class Data>
-AVLNode<Data> *AVLNode<Data>::getLeftSon() const {
-    return leftSon;
-}
 
 template<class Data>
 int AVLNode<Data>::getNodeHeight() const {

@@ -32,7 +32,7 @@ class AVLTree {
 public:
     explicit AVLTree(bool _isManagedMemory = false) : isManagedMemory(_isManagedMemory){
         root = new AVLNode<Data>(nullptr);
-        compare();
+        //compare();
     };
     ~AVLTree(){
         removeAll(root->getLeftSon());
