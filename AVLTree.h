@@ -246,12 +246,13 @@ private:
         if(isRightSon)
             nodeToRoll->getFather()->setRightSon(temp);
         else
-            nodeToRoll->getFather()->getLeftSon(temp);
+            nodeToRoll->getFather()->setLeftSon(temp);
 
         nodeToRoll->setRightSon(temp->getLeftSon());
         temp->setLeftSon(nodeToRoll);
 
-
+        nodeToRoll->updateHeightsAndBF();
+        temp->updateHeightsAndBF();
     }
     static void rollLL(AVLNode<Data>* nodeToRoll){
         assert(nodeToRoll != nullptr);

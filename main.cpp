@@ -8,7 +8,7 @@
 int main() {
     AVLTree<int ,int, CompareInt> intTree(true);
 
-    for(int i = 0; i < 3; ++i){
+    for(int i = 0; i < 20; ++i){
         int* ptr = (int*)malloc(sizeof(*ptr));
         *ptr = 2*i;
         intTree.insert(ptr);
