@@ -6,6 +6,8 @@
  * @return
  * true: if the height is changed
  * false: otherwise
+ *
+
  */
  template <class Data>
 bool AVLNode<Data>::updateHeightsAndBF(){
