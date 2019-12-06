@@ -16,6 +16,9 @@ typedef enum{
  * To use this class, please send ad a template 2 classes.
  * @tparam Compare - A function object that can Compare between 2 Data or
  * between Data to key
+ *  positive number in case data1 > data2
+ * negative number in case data1 < data2
+ * 0 in case data1 == data2
  */
  template <class Data, class Key, class Compare>
 class AVLTree {
@@ -26,6 +29,7 @@ public:
         root = new AVLNode<Data>(nullptr);
     };
     ~AVLTree(){
+        removeAll(root->getLeftSon());
         delete root;
     };
 
@@ -49,9 +53,8 @@ public:
     }
 
     /**
-     * @param data - dummy data that helps us find the real data through the right
-     * Compare function
-     * @return AVLNode* of the Node that has the data or nullptr in case the data do not exists.
+     * @param Key
+     * @return Pointer to the data connected to this key
      */
     Data* findData(Key key){
         return findNode(key)->getCurrentData();
@@ -59,19 +62,35 @@ public:
 
     /**
      * remove just remove the node from the tree - *without deleting the Data*
-     * for remove + delete Data use destroy(data);
-     * @param data
+     * @param Key
      */
     void remove(Key key){
         AVLNode<Data>* node = findNode(key);
-        assert(node != nullptr);
+        assert(node != nullptr); //TODO: Exception Key do not exist
+        removeNode(node);
+    }
+
+private:
+    /**
+     * remove the tree which r is its root bt post order
+     * @param r
+     */
+    void removeAll(AVLNode<Data> r){
+        if(r == nullptr)
+            return;
+        removeAll(r.getLeftSon());
+        removeAll(r.getRightSon());
+        removeNode(r);
+    }
+
+    void removeNode(AVLNode<Data> node){
         bool nodeIsRightSon = node->getFather()->getRightSon()==node;
         if(node->getRightSon() == nullptr){
             if(nodeIsRightSon)
                 node->getFather()->setRightSon(node->getLeftSon());
             else
                 node->getFather()->setLeftSon(node->getLeftSon());
-            delete node;    //TODO: check that node D'tor does not delete data
+            delete node;
             return;
         }
         AVLNode<Data>* updateFrom = nullptr;
@@ -91,35 +110,10 @@ public:
         updateTree(updateFrom);
     }
 
-    void destroy(Data* data){
-        remove(data);
-        delete data;
-    }
-
-    //TODO: Jonathan (4) orders
-    int** inOrder(){
-
-    }
-    int** postOrder(){
-
-    }
-    int** preOrder(){
+    void printTreeInOrder(){
 
     }
 
-protected:
-    /**
-     * Virtual function (to be override) which Compare between 2 data's
-     * @param data1
-     * @param data2
-     * @return:
-     * positive number in case data1 > data2
-     * negative number in case data1 < data2
-     * 0 in case data1 == data2
-     */
-    //virtual int Compare(Data* data1, Data* data2) = 0;
-
-private:
     /** Read:
  * Inside every data there is a ptr to the node, this function will be used
  * only in case we need to find the node that contains the real data by a dummy that carries the same id.    *
@@ -221,6 +215,7 @@ private:
         }
     }
 
+    //Rolls
     static void rollRR(AVLNode<Data>* nodeToRoll){
         assert(nodeToRoll != nullptr);
 
@@ -235,7 +230,6 @@ private:
         nodeToRoll->setLeftSon(temp->getRightSon());
         temp->setRightSon(nodeToRoll);
     }
-
     /** picture better than thousand words... so...
      *  Tree before:
      *                  nodeToRoll
@@ -261,7 +255,6 @@ private:
         tempB->setRightSon(tempA);
         tempB->setLeftSon(nodeToRoll);
     }
-
     static void rollLR(AVLNode<Data>* nodeToRoll){
         assert(nodeToRoll != nullptr);
 
