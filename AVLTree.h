@@ -4,7 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include "AVLNode.h"
-#include "DataStractureExceptions.h"
+#include "DataStructureExceptions.h"
 
 //TODO: For debugging
 using namespace std;
