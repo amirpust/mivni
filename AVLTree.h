@@ -108,15 +108,15 @@ public:
         int index = 0;
         if(root->getLeftSon() == nullptr)
             throw DoesntExists();
-        getKeysInOrderAux(keys, numOfKeys, index, root->getLeftSon());
+        getKeysInOrderAux(keys, numOfKeys, &index, root->getLeftSon());
     }
 
 private:
-    void getKeysInOrderAux(Key** keys, int numOfKeys, int* index, AVLNode<Data> node){
+    void getKeysInOrderAux(Key** keys, int numOfKeys, int* index, AVLNode<Data>* node){
         if( *index >= numOfKeys || node == nullptr)
             return;
         GetKeysInOrderAux(node->getLeftSon());
-        keys[(*index)++] = *(node.getCurrentData());
+        keys[(*index)++] = *(*(node->getCurrentData()));
         GetKeysInOrderAux(node->getRightSon());
     }
     /**
@@ -185,9 +185,9 @@ private:
     AVLNode<Data>* findNode(Key key){
         AVLNode<Data>* temp = root->getLeftSon();
         while(temp != nullptr){
-            if(compare(temp->getCurrentData(),key) == 0)
+            if(compare(temp->getCurrentData(), key) == 0)
                 return temp;
-            if(compare(key, temp->getCurrentData()) > 0)
+            if(compare(temp->getCurrentData(), key) > 0)
                 temp = temp->getRightSon();
             else
                 temp = temp->getLeftSon();
@@ -232,6 +232,7 @@ private:
                 temp = temp->getLeftSon();
             }
         }
+        return nullptr; //cant reach here
     }
 
     /**findReplacement

@@ -37,7 +37,9 @@ StatusType FreeServer(void *DS, int dataCenterID, int serverID){
 }
 
 StatusType GetDataCentersByOS(void *DS, int os, int **dataCenters, int* numOfDataCenters){
-
+    if(!DS)
+        return INVALID_INPUT;
+    return ((DataStructure*)(DS))->getDataCentersByOs(os, dataCenters, numOfDataCenters);
 }
 
 void Quit(void** DS){

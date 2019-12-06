@@ -1,6 +1,7 @@
 #ifndef _COMPAREINT_H
 #define _COMPAREINT_H
 
+//TODO: fix compares
 class CompareInt{
 public:
     int operator()(int* value1, int value2) {
