@@ -12,26 +12,29 @@ typedef enum{
     rightSon = 1
 }Sons;
 
-/** TODO: write how to use the class include what to override and the D'tor use
- *
+/** AVL Tree
+ * To use this class, please send ad a template 2 classes.
+ * @tparam Compare - A function object that can Compare between 2 Data or
+ * between Data to key
  */
+ template <class Data, class Key, class Compare>
 class AVLTree {
-    AVLNode* root;  //Dummy Root - the left son is the real first node
+    AVLNode<Data>* root;  //Dummy Root - the left son is the real first node
 
 public:
     explicit AVLTree(){
-        root = new AVLNode(nullptr);
+        root = new AVLNode<Data>(nullptr);
     };
     ~AVLTree(){
         delete root;
     };
 
-    void insert(DataCenter* dc){
+    void insert(Data* data){
         Sons son;
-        AVLNode* father = findFather(dc, &son);
+        AVLNode<Data>* father = findFather(data, &son);
 
         assert( father != nullptr);
-        auto newNode = new AVLNode(dc,father);
+        auto newNode = new AVLNode<Data>(data,father);
 
 
         if(son == leftSon){
@@ -45,36 +48,34 @@ public:
         updateTree(father);
     }
 
-    /** Read:
- * Inside every DC there is a ptr to the node, this function will be used
- * only in case we need to find the real DC by a dummy that carries the same id.    *
- * @param dc - dummy DC that helps us find the real DC through the right
- * compare function
- * @return AVLNode* of the Node that has the DC or nullptr in case the DC do not exists.
- */
-    DataCenter* findDataCenter(DataCenter* dc){
-        return findNode(dc)->getCurrentDataCenter();
+    /**
+     * @param data - dummy data that helps us find the real data through the right
+     * Compare function
+     * @return AVLNode* of the Node that has the data or nullptr in case the data do not exists.
+     */
+    Data* findData(Key key){
+        return findNode(key)->getCurrentData();
     }
 
     /**
-     * remove just remove the node from the tree - *without deleting the data*
-     * for remove + delete data use destroy(dc);
-     * @param dc
+     * remove just remove the node from the tree - *without deleting the Data*
+     * for remove + delete Data use destroy(data);
+     * @param data
      */
-    void remove(DataCenter* dc){
-        assert(dc != nullptr);
-        AVLNode* node = findNode(dc);
+    void remove(Key key){
+        AVLNode<Data>* node = findNode(key);
+        assert(node != nullptr);
         bool nodeIsRightSon = node->getFather()->getRightSon()==node;
         if(node->getRightSon() == nullptr){
             if(nodeIsRightSon)
                 node->getFather()->setRightSon(node->getLeftSon());
             else
                 node->getFather()->setLeftSon(node->getLeftSon());
-            delete node;    //TODO: check that node D'tor does not delete DC
+            delete node;    //TODO: check that node D'tor does not delete data
             return;
         }
-        AVLNode* updateFrom = nullptr;
-        AVLNode* replaceBy = findReplacement(node, updateFrom);
+        AVLNode<Data>* updateFrom = nullptr;
+        AVLNode<Data>* replaceBy = findReplacement(node, updateFrom);
         assert(updateFrom != nullptr);
 
         //Sets the replacement sons
@@ -90,9 +91,9 @@ public:
         updateTree(updateFrom);
     }
 
-    void destroy(DataCenter* dc){
-        remove(dc);
-        delete dc;
+    void destroy(Data* data){
+        remove(data);
+        delete data;
     }
 
     //TODO: Jonathan (4) orders
@@ -108,30 +109,30 @@ public:
 
 protected:
     /**
-     * Virtual function (to be override) which compare between 2 Dc's
-     * @param dc1
-     * @param dc2
+     * Virtual function (to be override) which Compare between 2 data's
+     * @param data1
+     * @param data2
      * @return:
-     * positive number in case dc1 > dc2
-     * negative number in case dc1 < dc2
-     * 0 in case dc1 == dc2
+     * positive number in case data1 > data2
+     * negative number in case data1 < data2
+     * 0 in case data1 == data2
      */
-    virtual int compare(DataCenter* dc1, DataCenter* dc2) = 0;
+    //virtual int Compare(Data* data1, Data* data2) = 0;
 
 private:
     /** Read:
- * Inside every DC there is a ptr to the node, this function will be used
- * only in case we need to find the node that contains the real DC by a dummy that carries the same id.    *
- * @param dc - dummy DC that helps us find the real DC through the right
- * compare function
- * @return AVLNode* of the Node that has the DC or nullptr in case the DC do not exists.
+ * Inside every data there is a ptr to the node, this function will be used
+ * only in case we need to find the node that contains the real data by a dummy that carries the same id.    *
+ * @param data - dummy data that helps us find the real data through the right
+ * Compare function
+ * @return AVLNode* of the Node that has the data or nullptr in case the data do not exists.
  */
-    AVLNode* findNode(DataCenter* dc){
-        AVLNode* temp = root->getLeftSon();
+    AVLNode<Data>* findNode(Key key){
+        AVLNode<Data>* temp = root->getLeftSon();
         while(temp != nullptr){
-            if(compare(temp->getCurrentDataCenter(),dc) == 0)
+            if(Compare(temp->getCurrentData(),key) == 0)
                 return temp;
-            if(compare(dc, temp->getCurrentDataCenter()) > 0)
+            if(Compare(key, temp->getCurrentData()) > 0)
                 temp = temp->getRightSon();
             else
                 temp = temp->getLeftSon();
@@ -140,26 +141,26 @@ private:
     }
 
     /**
- * Find the legitimate father of the dc.
+ * Find the legitimate father of the data.
  * Used mainly to find a place to a new node.
- * @param dc the
+ * @param data the
  * @param son is an int ptr that holds where the son needs to be.
  * @return
  * The AVLNode to the father
  */
-    AVLNode* findFather(DataCenter* dc, Sons* son){
-        AVLNode* temp = root->getLeftSon();
+    AVLNode<Data>* findFather(Data* data, Sons* son){
+        AVLNode<Data>* temp = root->getLeftSon();
         if(temp == nullptr){
             *son = leftSon;
             return root;
         }
 
         while(temp != nullptr){
-            if(compare(temp->getCurrentDataCenter(),dc) == 0){
+            if(Compare(temp->getCurrentData(),data) == 0){
                 *son = tempSon;
-                return nullptr; //Happened only if the dc already exists
+                return nullptr; //Happened only if the data already exists
             }
-            if(compare(dc, temp->getCurrentDataCenter()) > 0){
+            if(Compare(data, temp->getCurrentData()) > 0){
                 if(temp->getRightSon() == nullptr){
                     *son = rightSon;
                     return temp;
@@ -184,8 +185,8 @@ private:
      * @param node
      * @return
      */
-    static AVLNode* findReplacement(const AVLNode* node, AVLNode*& updateFrom){
-        AVLNode* iterator = node->getRightSon();
+    static AVLNode<Data>* findReplacement(const AVLNode<Data>* node, AVLNode<Data>*& updateFrom){
+        AVLNode<Data>* iterator = node->getRightSon();
         assert(iterator != nullptr);
         while(iterator->getLeftSon() != nullptr)
             iterator = iterator->getLeftSon();
@@ -201,7 +202,7 @@ private:
      *
      * @param updateFrom
      */
-    void updateTree(AVLNode* updateFrom){
+    void updateTree(AVLNode<Data>* updateFrom){
         while(updateFrom != root && updateFrom->updateHeightsAndBF()){
             int bf = updateFrom->getBf();
             if(bf < -1 || bf > 1){
@@ -220,18 +221,17 @@ private:
         }
     }
 
-
-    static void rollRR(AVLNode* nodeToRoll){
+    static void rollRR(AVLNode<Data>* nodeToRoll){
         assert(nodeToRoll != nullptr);
 
-        AVLNode* temp = nodeToRoll->getRightSon();
+        AVLNode<Data>* temp = nodeToRoll->getRightSon();
         nodeToRoll->setRightSon(temp->getLeftSon());
         temp->setLeftSon(nodeToRoll);
     }
-    static void rollLL(AVLNode* nodeToRoll){
+    static void rollLL(AVLNode<Data>* nodeToRoll){
         assert(nodeToRoll != nullptr);
 
-        AVLNode* temp = nodeToRoll->getLeftSon();
+        AVLNode<Data>* temp = nodeToRoll->getLeftSon();
         nodeToRoll->setLeftSon(temp->getRightSon());
         temp->setRightSon(nodeToRoll);
     }
@@ -250,10 +250,10 @@ private:
      *
      * @param nodeToRoll
      */
-    static void rollRL(AVLNode* nodeToRoll){
+    static void rollRL(AVLNode<Data>* nodeToRoll){
         assert(nodeToRoll != nullptr);
-        AVLNode* tempA = nodeToRoll->getRightSon();
-        AVLNode* tempB = tempA->getLeftSon();
+        AVLNode<Data>* tempA = nodeToRoll->getRightSon();
+        AVLNode<Data>* tempB = tempA->getLeftSon();
 
         nodeToRoll->setRightSon(tempB->getLeftSon());
         tempA->setLeftSon(tempB->getRightSon());
@@ -262,11 +262,11 @@ private:
         tempB->setLeftSon(nodeToRoll);
     }
 
-    static void rollLR(AVLNode* nodeToRoll){
+    static void rollLR(AVLNode<Data>* nodeToRoll){
         assert(nodeToRoll != nullptr);
 
-        AVLNode* tempA = nodeToRoll->getLeftSon();
-        AVLNode* tempB = tempA->getRightSon();
+        AVLNode<Data>* tempA = nodeToRoll->getLeftSon();
+        AVLNode<Data>* tempB = tempA->getRightSon();
 
         tempA->setRightSon(tempB->getLeftSon());
         tempB->setLeftSon(tempA);
