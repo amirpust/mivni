@@ -2,25 +2,18 @@
 #include "DataCenter.h"
 #include <cassert>
 #include "AVLTree.h"
+#include "CompareInt.h"
 
-class CompareInt{
-public:
-    int operator()(int* value1, int value2) {
-        return *value1-value2;
-    }
-    int operator()(int* value1, int* value2) {
-        return *value1-*value2;
-    }
-};
 
 int main() {
     AVLTree<int ,int, CompareInt> intTree(true);
 
-    for(int i = 0; i < 20; ++i){
+    for(int i = 0; i < 3; ++i){
         int* ptr = (int*)malloc(sizeof(*ptr));
         *ptr = 2*i;
         intTree.insert(ptr);
     }
+    intTree.printInOrder();
 
 
     return 0;

@@ -78,7 +78,7 @@ public:
 
     //TODO: for debugging - delete before sub
     void printInOrder(){
-
+        printInOrderAux(root->getLeftSon());
     }
 
 private:
@@ -127,12 +127,13 @@ private:
         updateTree(updateFrom);
     }
 
-    void printInOrderAux(AVLNode<Data> node){
+    void printInOrderAux(AVLNode<Data>* node){
         if(node == nullptr)
             return;
-        printInOrderAux(node.getLeftSon());
-        printInOrderAux(node.getRightSon());
-        cout << node.getCurrentData() << endl;
+        cout << *(node->getCurrentData()) << endl;
+        printInOrderAux(node->getLeftSon());
+        printInOrderAux(node->getRightSon());
+
     }
 
     /** Read:
@@ -239,10 +240,18 @@ private:
     //Rolls
     static void rollRR(AVLNode<Data>* nodeToRoll){
         assert(nodeToRoll != nullptr);
+        bool isRightSon = nodeToRoll->getFather()->getRightSon() == nodeToRoll;
 
         AVLNode<Data>* temp = nodeToRoll->getRightSon();
+        if(isRightSon)
+            nodeToRoll->getFather()->setRightSon(temp);
+        else
+            nodeToRoll->getFather()->getLeftSon(temp);
+
         nodeToRoll->setRightSon(temp->getLeftSon());
         temp->setLeftSon(nodeToRoll);
+
+
     }
     static void rollLL(AVLNode<Data>* nodeToRoll){
         assert(nodeToRoll != nullptr);
