@@ -1,24 +1,21 @@
 #ifndef _DATASTRUCTURE_H
 #define _DATASTRUCTURE_H
 
-#include <memory>
 #include "CompareID.h"
 #include "CompareLinux.h"
 #include "CompareWindows.h"
 #include "DataCenter.h"
 #include "AVLTree.h"
 
-using std::shared_ptr;
-using std::make_shared;
 
 typedef enum {
     ALLOCATION_ERROR, INVALID_INPUT, FAILURE, SUCCESS
 } DataStructureStatus;
 
 class DataStructure {
-    AVLTree<shared_ptr<DataCenter>, int, CompareID> *idTree;
-    AVLTree<shared_ptr<DataCenter>, int, CompareLinux> *linuxTree;
-    AVLTree<shared_ptr<DataCenter>, int, CompareWindows> *windowsTree;
+    AVLTree<DataCenter, int, CompareID> *idTree;
+    AVLTree<DataCenter, int, CompareLinux> *linuxTree;
+    AVLTree<DataCenter, int, CompareWindows> *windowsTree;
 
 public:
     DataStructure();

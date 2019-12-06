@@ -2,6 +2,7 @@
 #define _NODE_H
 
 #include <cstdio>
+#include <cmath>
 #include "Server.h"
 #include "DataCenter.h"
 
@@ -22,38 +23,71 @@ public:
             currentData(currentData), father(father), rightSon(rightSon), leftSon(leftSon), nodeHeight(nodeHeight),
                                                                                   bf(bf){};
 
-    Data *getCurrentData() const;
+    Data *getCurrentData() const{
+        return currentData;
+    };
 
-    bool updateHeightsAndBF();
+    /**
+ * update the heights and the BF.
+ * @return
+ * true: if the height is changed
+ * false: otherwise
+ */
+    bool updateHeightsAndBF(){
+        int rightSonHeight = getSonHeight(rightSon);
+        int leftSonHeight = getSonHeight(leftSon);
+        bf = leftSonHeight - rightSonHeight;
+        if(nodeHeight != (int)fmax(rightSonHeight, leftSonHeight) + 1){
+            nodeHeight =  (int)fmax(rightSonHeight, leftSonHeight) + 1;
+            return true;
+        }
+        return false;
+    };
 
     virtual ~AVLNode() = default;
 
-    AVLNode *getFather() const;
+    AVLNode *getFather() const{
+        return father;
+    };
 
-    AVLNode *getRightSon() const;
+    AVLNode *getRightSon() const{
+        return rightSon;
+    };
 
     AVLNode *getLeftSon() const{
         return leftSon;
     };
 
-    int getNodeHeight() const;
+    int getNodeHeight() const{
+        return nodeHeight;
+    };
 
-    int getBf() const;
+    int getBf() const{
+        return bf;
+    };
 
-    void setCurrentData(Data *currentData);
+    void setFather(AVLNode *father){
+        AVLNode<Data>::father = father;
+    };
 
-    void setFather(AVLNode *father);
+    void setRightSon(AVLNode *rightSon){
+        AVLNode<Data>::rightSon = rightSon;
+        if(rightSon != nullptr)
+            rightSon->setFather(this);
+    };
 
-    void setRightSon(AVLNode *rightSon);
-
-    void setLeftSon(AVLNode *leftSon);
-
-    void setNodeHeight(int nodeHeight);
-
-    void setBf(int bf);
+    void setLeftSon(AVLNode *leftSon){
+        AVLNode<Data>::leftSon = leftSon;
+        if(leftSon != nullptr)
+            leftSon->setFather(this);
+    };
 
 private:
-    int getSonHeight(AVLNode* son);
+    int getSonHeight(AVLNode* son){
+        if (son == nullptr)
+            return -1;
+        return  son->getNodeHeight();
+    };
 };
 
 #endif //_NODE_H
