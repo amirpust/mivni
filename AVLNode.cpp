@@ -1,21 +1,14 @@
 #include "AVLNode.h"
 #include <cmath>
 
-AVLNode::AVLNode(DataCenter *currentDataCenter, AVLNode *father
-        , AVLNode *rightSon, AVLNode *leftSon, int nodeHeight)
-        : currentDataCenter(currentDataCenter), father(father), rightSon(rightSon)
-        , leftSon(leftSon),
-          nodeHeight(nodeHeight) {
-
-}
-
 /**
  * update the heights and the BF.
  * @return
  * true: if the height is changed
  * false: otherwise
  */
-bool AVLNode::updateHeightsAndBF(){
+ template <class data>
+bool AVLNode<data>::updateHeightsAndBF(){
     int rightSonHeight = getSonHeight(rightSon);
     int leftSonHeight = getSonHeight(leftSon);
     bf = leftSonHeight - rightSonHeight;
@@ -26,56 +19,79 @@ bool AVLNode::updateHeightsAndBF(){
     return false;
 }
 
-int AVLNode::getSonHeight(AVLNode *son) {
-    if(son == nullptr)
-        return -1;
-    return son->getNodeHeight();
+
+template<class data>
+AVLNode<data>::AVLNode(data *currentData, AVLNode *father, AVLNode *rightSon, AVLNode *leftSon, int nodeHeight, int bf)
+        :currentData(currentData), father(father), rightSon(rightSon), leftSon(leftSon), nodeHeight(nodeHeight),
+         bf(bf) {}
+
+template<class data>
+data *AVLNode<data>::getCurrentData() const {
+    return currentData;
 }
 
-DataCenter* AVLNode::getCurrentDataCenter() const {
-    return currentDataCenter;
-}
-
-void AVLNode::setCurrentDataCenter(DataCenter *currentDataCenter) {
-    AVLNode::currentDataCenter = currentDataCenter;
-}
-
-AVLNode *AVLNode::getFather() const {
+template<class data>
+AVLNode<data> *AVLNode<data>::getFather() const {
     return father;
 }
 
-void AVLNode::setFather(AVLNode *father) {
-    AVLNode::father = father;
-}
-
-AVLNode *AVLNode::getRightSon() const {
+template<class data>
+AVLNode<data> *AVLNode<data>::getRightSon() const {
     return rightSon;
 }
 
-void AVLNode::setRightSon(AVLNode *rightSon) {
+template<class data>
+AVLNode<data> *AVLNode<data>::getLeftSon() const {
+    return leftSon;
+}
+
+template<class data>
+int AVLNode<data>::getNodeHeight() const {
+    return nodeHeight;
+}
+
+template<class data>
+int AVLNode<data>::getBf() const {
+    return bf;
+}
+
+template<class data>
+void AVLNode<data>::setCurrentData(data *currentData) {
+    AVLNode::currentData = currentData;
+}
+
+template<class data>
+void AVLNode<data>::setFather(AVLNode *father) {
+    AVLNode::father = father;
+}
+
+template<class data>
+void AVLNode<data>::setRightSon(AVLNode *rightSon) {
     AVLNode::rightSon = rightSon;
     if(rightSon != nullptr)
         rightSon->setFather(this);
 }
 
-AVLNode *AVLNode::getLeftSon() const {
-    return leftSon;
-}
-
-void AVLNode::setLeftSon(AVLNode *leftSon) {
+template<class data>
+void AVLNode<data>::setLeftSon(AVLNode *leftSon) {
     AVLNode::leftSon = leftSon;
     if(leftSon != nullptr)
         leftSon->setFather(this);
 }
 
-int AVLNode::getNodeHeight() const {
-    return nodeHeight;
-}
-
-void AVLNode::setNodeHeight(int nodeHeight) {
+template<class data>
+void AVLNode<data>::setNodeHeight(int nodeHeight) {
     AVLNode::nodeHeight = nodeHeight;
 }
 
-int AVLNode::getBf() const {
-    return bf;
+template<class data>
+void AVLNode<data>::setBf(int bf) {
+    AVLNode::bf = bf;
+}
+
+template<class data>
+int AVLNode<data>::getSonHeight(AVLNode *son) {
+    if (son == nullptr)
+        return -1;
+    return  son->getNodeHeight();
 }
