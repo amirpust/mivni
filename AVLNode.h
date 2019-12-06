@@ -4,10 +4,10 @@
 #include <cstdio>
 #include "Server.h"
 #include "DataCenter.h"
-
+template <class data>
 class AVLNode {
 private:
-    DataCenter *currentDataCenter;
+    data *currentData;
     AVLNode *father;
     AVLNode *rightSon;
     AVLNode *leftSon;
