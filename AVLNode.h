@@ -46,15 +46,15 @@ public:
 
     virtual ~AVLNode() = default;
 
-    AVLNode *getFather() const{
+    AVLNode<Data> *getFather() const{
         return father;
     };
 
-    AVLNode *getRightSon() const{
+    AVLNode<Data> *getRightSon() const{
         return rightSon;
     };
 
-    AVLNode *getLeftSon() const{
+    AVLNode<Data> *getLeftSon() const{
         return leftSon;
     };
 
@@ -83,7 +83,7 @@ public:
     };
 
 private:
-    int getSonHeight(AVLNode* son){
+    int getSonHeight(AVLNode<Data>* son){
         if (son == nullptr)
             return -1;
         return  son->getNodeHeight();
