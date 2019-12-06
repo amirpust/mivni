@@ -1,19 +1,24 @@
 #ifndef _DATASTRUCTURE_H
 #define _DATASTRUCTURE_H
 
-#include "AVLTreeById.h"
-#include "AVLTreeByWindows.h"
-#include "AVLTreeByLinux.h"
+#include <memory>
+#include "CompareID.h"
+#include "CompareLinux.h"
+#include "CompareWindows.h"
 #include "DataCenter.h"
+#include "AVLTree.h"
+
+using std::shared_ptr;
+using std::make_shared;
 
 typedef enum {
     ALLOCATION_ERROR, INVALID_INPUT, FAILURE, SUCCESS
 } DataStructureStatus;
 
 class DataStructure {
-    AVLTreeById *idTree;
-    AVLTreeByLinux *linuxTree;
-    AVLTreeByWindows *windowsTree;
+    AVLTree<shared_ptr<DataCenter>, int, CompareID> *idTree;
+    AVLTree<shared_ptr<DataCenter>, int, CompareLinux> *linuxTree;
+    AVLTree<shared_ptr<DataCenter>, int, CompareWindows> *windowsTree;
 
 public:
     DataStructure();
@@ -36,15 +41,14 @@ public:
         if (numOfServers <= 0 || dataCenterId <= 0)
             return INVALID_INPUT;
 
-        auto dummyDataCenter = new DataCenter(dataCenterId, numOfServers);
-
-        if (idTree->findDataCenter(dummyDataCenter) != nullptr) {
-            delete dummyDataCenter;
+        if (idTree->findData(dataCenterId)) {
             return FAILURE;
         }
 
-        idTree->insert(dummyDataCenter);
-        linuxTree->insert(dummyDataCenter);
+        shared_ptr<DataCenter> currentData = make_shared<DataCenter>(new DataCenter(dataCenterId, numOfServers));
+
+        idTree->insert(&currentData);
+        linuxTree->insert(&currentData);
         windowsTree->insert(dummyDataCenter);
 
         return SUCCESS;
@@ -94,8 +98,7 @@ public:
      *           or all servers are taken
      * SUCCESS - all succeeded
      */
-    DataStructureStatus requestServerFromDataCenter(int dataCenterId, int serverID
-            , int os, int *assignedID) {
+    DataStructureStatus requestServerFromDataCenter(int dataCenterId, int serverID, int os, int *assignedID) {
         if (dataCenterId <= 0 || assignedID == NULL || serverID < 0
             || os < LINUX || os > WINDOWS)
             return INVALID_INPUT;
@@ -147,17 +150,17 @@ public:
         return SUCCESS;
     }
 
-    DataStructureStatus removeDataCenetr(int dataCenterID){
+    DataStructureStatus removeDataCenetr(int dataCenterID) {
         if (dataCenterID <= 0)
             return INVALID_INPUT;
 
-        DataCenter* dummy = new DataCenter(dataCenterID,0);
-        DataCenter* result = idTree->findDataCenter(dummy);
+        DataCenter *dummy = new DataCenter(dataCenterID, 0);
+        DataCenter *result = idTree->findDataCenter(dummy);
         delete dummy;
 
-        if (result == nullptr){
+        if (result == nullptr) {
 
-            return  FAILURE;
+            return FAILURE;
         }
 
         idTree->destroy(result);
