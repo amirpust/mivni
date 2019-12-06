@@ -46,4 +46,5 @@ public:
     StatusType statusType = FAILURE;
 };
 
+
 #endif //_DataStructureExceptionS_H

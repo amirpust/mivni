@@ -6,11 +6,9 @@
 #include "CompareWindows.h"
 #include "DataCenter.h"
 #include "AVLTree.h"
+#include <exception>
 
 
-typedef enum {
-    ALLOCATION_ERROR, INVALID_INPUT, FAILURE, SUCCESS
-} DataStructureStatus;
 
 class DataStructure {
     AVLTree<DataCenter, int, CompareID> *idTree;
@@ -34,21 +32,25 @@ public:
  * FAILURE - if dataCenterID already exist
  * SUCCESS - if succeeded
  */
-    DataStructureStatus addDataCenter(int dataCenterId, int numOfServers) {
+    StatusType addDataCenter(int dataCenterId, int numOfServers) {
         if (numOfServers <= 0 || dataCenterId <= 0)
             return INVALID_INPUT;
 
-        if (idTree->findData(dataCenterId)) {
+        if (idTree->findData(dataCenterId) != nullptr) {
             return FAILURE;
         }
+        try{
+            auto currentData = new DataCenter(dataCenterId, numOfServers);
 
-        auto currentData = new DataCenter(dataCenterId, numOfServers);
+            idTree->insert(currentData);
+            linuxTree->insert(currentData);
+            windowsTree->insert(currentData);
 
-        idTree->insert(currentData);
-        linuxTree->insert(currentData);
-        windowsTree->insert(currentData);
-
-        return SUCCESS;
+            return SUCCESS;
+        }
+        catch(DataStructureException& d){
+            return d.statusType;
+        }
     }
 
     /**
@@ -59,8 +61,7 @@ public:
      * SUCCESS - if succeeded
      */
 
-    //TODO : catch throw OOM
-    DataStructureStatus removeDataCenter(int dataCenterID) {
+    StatusType removeDataCenter(int dataCenterID) {
         if (dataCenterID <= 0)
             return INVALID_INPUT;
 
@@ -91,7 +92,7 @@ public:
      *           or all servers are taken
      * SUCCESS - all succeeded
      */
-    DataStructureStatus requestServerFromDataCenter(int dataCenterId, int serverID, int os, int *assignedID) {
+    StatusType requestServerFromDataCenter(int dataCenterId, int serverID, int os, int *assignedID) {
         if (dataCenterId <= 0 || assignedID == NULL || serverID < 0
             || os < LINUX || os > WINDOWS)
             return INVALID_INPUT;
@@ -102,40 +103,30 @@ public:
         if (currentDataCenter == nullptr)
             return FAILURE;
 
-        DataCenterStatus result = currentDataCenter->requestServer(serverID, os, assignedID);
-
-        if (result == FAILURE_DC)
-            return FAILURE;
-
-        else if (result == INVALID_INPUT_DC)
-            return INVALID_INPUT;
-
-        if (result == SUCCESS_CHANGE_OS_DC) {
-            windowsTree->remove(dataCenterId);
-            windowsTree->insert(currentDataCenter);
-            linuxTree->remove(dataCenterId);
-            linuxTree->insert(currentDataCenter);
+        try {
+            DataCenterStatus result = currentDataCenter->requestServer(serverID, os, assignedID);
+            if (result == SUCCESS_CHANGE_OS_DC) {
+                windowsTree->remove(dataCenterId);
+                windowsTree->insert(currentDataCenter);
+                linuxTree->remove(dataCenterId);
+                linuxTree->insert(currentDataCenter);
+            }
+        }catch(DataStructureException& d){
+            return d.statusType;
         }
 
         return SUCCESS;
     }
 
-    DataStructureStatus freeServerFromDataCenter(int dataCenterID, int serverID) {
+    StatusType freeServerFromDataCenter(int dataCenterID, int serverID) {
         if (serverID < 0 || dataCenterID <= 0)
             return INVALID_INPUT;
-
-        auto currentDataCenter = idTree->findData(dataCenterID);
-
-        if (currentDataCenter == nullptr)
-            return FAILURE;
-
-        DataCenterStatus result = currentDataCenter->freeServer(serverID);
-
-        if (result == INVALID_INPUT_DC)
-            return INVALID_INPUT;
-
-        else if (result == FAILURE_DC)
-            return FAILURE;
+        try {
+            auto currentDataCenter = idTree->findData(dataCenterID);
+            currentDataCenter->freeServer(serverID);
+        }catch (DataStructureException& d){
+            return d.statusType;
+        }
 
         return SUCCESS;
     }

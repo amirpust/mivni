@@ -2,22 +2,46 @@
 
 DataCenter::DataCenter(int dataCenterId, int numberOfServers)
         : dataCenterID(dataCenterId), numberOfServers(numberOfServers) {
-    pointerArray = new Server*[numberOfServers];
+
+    initializePointerArray();
+
     linuxServerNumber = numberOfServers;
     windowsServerNumber =  0;
 
-    linuxListEnd = new Server(-1);
-    linuxListHead = new Server(-2);//TODO: check if we can remove magic numbers
+    initializeLinuxEnd();
+
+    initializeLinuxHead();
+
     linuxListEnd->setPrevious(linuxListHead);
     linuxListHead->setNext(linuxListEnd);
 
-    windowsListEnd = new Server(-3);
-    windowsListHead = new Server(-4);
+    initializeWindowsEnd();
+
+    initializeWindowsHead();
+
     windowsListEnd->setPrevious(windowsListHead);
     windowsListHead->setNext(windowsListEnd);
 
     unusedServers = numberOfServers;
+
     initializeListAndPointerArray();
+}
+
+void DataCenter::initializeLinuxEnd(){
+    try {
+        linuxListEnd = new Server(-1);
+    }catch (exception& e){
+        delete pointerArray;
+        throw OutOfMemory();
+    }
+}
+void DataCenter::initializePointerArray(){
+    try{
+        pointerArray = new Server*[numberOfServers];
+    }catch (exception& e){
+        throw OutOfMemory();
+    }
+
 }
 
 int DataCenter::getDataCenterId() const {
@@ -40,15 +64,40 @@ void DataCenter::initializeListAndPointerArray() {
     if(numberOfServers == 0)
         return;
 
-    auto firstServer = new Server(0); //TODO: OOM throw
+    Server* firstServer;
+    try {
+        firstServer = new Server(0); //TODO: OOM throw
+    }catch(exception& e) {
+        delete pointerArray;
+        delete linuxListEnd;
+        delete linuxListHead;
+        delete windowsListHead;
+        delete windowsListEnd;
+        throw OutOfMemory();
+    }
+
 
     firstServer->addServerToList(linuxListEnd,linuxListHead);
     pointerArray[0]=firstServer;
 
     for (int i = 1; i < numberOfServers; ++i) {
-        auto temp = new  Server(i);
-        temp->addServerToList(linuxListEnd,pointerArray[i-1]);
-        pointerArray[i] = temp;
+        try {
+            auto temp = new  Server(i);
+            temp->addServerToList(linuxListEnd,pointerArray[i-1]);
+            pointerArray[i] = temp;
+        }catch (exception& e){
+            for (int j = i-1; j >= 0; --j) {
+                pointerArray[j]->removeServerFromList();
+                delete pointerArray[j];
+            }
+            delete linuxListEnd;
+            delete linuxListHead;
+            delete windowsListHead;
+            delete windowsListEnd;
+            delete firstServer;
+            delete pointerArray;
+            throw OutOfMemory();
+        }
     }
 }
 
@@ -126,17 +175,17 @@ bool DataCenter::giveDifferentServer(int os, int *assignedServerId) {
 
 DataCenterStatus DataCenter::requestServer(const int requestedId, const int os, int *assignedServerId) {
     if (unusedServers == 0)
-        return FAILURE_DC; //no more servers
+        throw NoFreeServers();
     if (requestedId >= numberOfServers || requestedId < 0 || os > 1 || os < 0
             || assignedServerId == NULL )
-        return INVALID_INPUT_DC;
+        throw InvalidInput();
     if (!pointerArray[requestedId]->isTaken()) {
         if(giveFreeServer(requestedId,os,assignedServerId)){
             unusedServers--;
             return SUCCESS_CHANGE_OS_DC;
         }
         unusedServers--;
-        return SUCCESS_DC; //success
+        return SUCCESS_DC;
     }
     if(giveDifferentServer(os,assignedServerId)){
         unusedServers--;
@@ -148,10 +197,10 @@ DataCenterStatus DataCenter::requestServer(const int requestedId, const int os, 
 
 DataCenterStatus DataCenter::freeServer(int serverId) {
     if (serverId >= numberOfServers || serverId < 0) {
-        return INVALID_INPUT_DC;
+        throw InvalidInput();
     }
     if (!pointerArray[serverId]->isTaken()) {
-        return FAILURE_DC;
+        throw AlreadyFree();
     }
 
     pointerArray[serverId]->setTaken(false);
@@ -175,4 +224,38 @@ DataCenter::~DataCenter() {
     delete linuxListHead;
     delete windowsListEnd;
     delete windowsListHead;
+}
+
+void DataCenter::initializeWindowsHead() {
+    try {
+        windowsListHead = new Server(-4);
+    }catch (exception& e){
+        delete pointerArray;
+        delete linuxListHead;
+        delete linuxListEnd;
+        delete windowsListEnd;
+        throw OutOfMemory();
+    }
+}
+
+void DataCenter::initializeWindowsEnd() {
+    try {
+        windowsListEnd = new Server(-3);
+    }catch (exception& e){
+        delete pointerArray;
+        delete linuxListEnd;
+        delete linuxListHead;
+        throw OutOfMemory();
+    }
+}
+
+void DataCenter::initializeLinuxHead() {
+    try {
+        linuxListHead = new Server(-2);
+    } catch (exception &e) {
+        delete pointerArray;
+        delete linuxListEnd;
+        throw OutOfMemory();
+
+    }
 }

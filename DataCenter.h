@@ -2,6 +2,7 @@
 #define _DATACENTER_H
 
 #include "Server.h"
+#include "DataStructureExceptions.h"
 typedef enum {
     ALLOCATION_ERROR_DC, INVALID_INPUT_DC, FAILURE_DC, SUCCESS_CHANGE_OS_DC,SUCCESS_DC
 } DataCenterStatus;
@@ -36,6 +37,7 @@ public:
     const bool operator>(const int key) const;
 
     const bool operator==(const int key) const;
+
     /**
      * This function decides if the server is free, if so it assigns it with the
      * compatible OS system.
@@ -64,10 +66,15 @@ public:
      */
     DataCenterStatus freeServer(int serverId);
 
+    const int operator*() const {
+        return dataCenterID;
+    }
+
     virtual ~DataCenter();
 
 private:
     void initializeListAndPointerArray();
+
 /**
  *
  * @param os
@@ -77,6 +84,7 @@ private:
  * false otherwise
  */
     bool giveDifferentServer(int os, int *assignedServerId);
+
 /**
  *
  * @param serverId
@@ -91,6 +99,16 @@ private:
     void giveServer(int serverId, int *assignedServerId);
 
     void changeServerAmount(int os);
+
+    void initializePointerArray();
+
+    void initializeLinuxEnd();
+
+    void initializeLinuxHead();
+
+    void initializeWindowsEnd();
+
+    void initializeWindowsHead();
 };
 
 
