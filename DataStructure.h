@@ -132,7 +132,7 @@ public:
         }
 
         try {
-            dataCenters = new int*[*numOfDataCenters];
+            dataCenters = new int*[*numOfDataCenters]();
         }catch (exception& e){
             return ALLOCATION_ERROR;
         }
