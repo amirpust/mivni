@@ -66,7 +66,7 @@ public:
      */
     DataCenterStatus freeServer(int serverId);
 
-    const int* operator*() const {
+    int* operator*() {
         return &dataCenterID;
     }
 
