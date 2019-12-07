@@ -1,6 +1,7 @@
 #include "DataStructure.h"
 
 DataStructure::DataStructure() {
+    numberOfDataCenters = 0;
     try {
         idTree = new AVLTree<DataCenter,int,CompareID>(true);
     }catch (exception& e){

@@ -15,6 +15,8 @@ class DataStructure {
     AVLTree<DataCenter, int, CompareLinux> *linuxTree;
     AVLTree<DataCenter, int, CompareWindows> *windowsTree;
 
+    int numberOfDataCenters;
+
 public:
     DataStructure();
 
@@ -41,7 +43,7 @@ public:
             idTree->insert(currentData);
             linuxTree->insert(currentData);
             windowsTree->insert(currentData);
-
+            numberOfDataCenters++;
             return SUCCESS;
         }catch (std::bad_alloc& ba){
             return ALLOCATION_ERROR;
@@ -71,6 +73,7 @@ public:
         }catch(DataStructureException& d){
             return d.statusType;
         }
+        numberOfDataCenters--;
 
         return SUCCESS;
     }
@@ -127,14 +130,14 @@ public:
     }
 
     StatusType getDataCentersByOs(int os, int **dataCenters,int* numOfDataCenters){
-        if(dataCenters == NULL || numOfDataCenters == NULL || os < 0 || os > 1){
+        if(dataCenters == NULL || numOfDataCenters == NULL || os < 0 || os > 1 ||*numOfDataCenters <= 0){
             return INVALID_INPUT;
         }
-        if(*numOfDataCenters <= 0)
-            return SUCCESS; //TODO: Check what to return (Success in empty way)
-
+        *numOfDataCenters = numberOfDataCenters;
         try {
-            dataCenters = new int*[*numOfDataCenters]();
+            *dataCenters = (int*)malloc(sizeof(int)*(*numOfDataCenters)) ;
+            if (*dataCenters == NULL)
+                return ALLOCATION_ERROR;
         }catch (exception& e){
             cout << "OS: " << os << endl;//TODO: Debugging delete before submission
             cout << "Num of servers: " << *numOfDataCenters << endl;
