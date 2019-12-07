@@ -15,7 +15,7 @@ class Server{
 
 public:
     explicit Server(int id, Server *next = nullptr, Server *previous = nullptr):
-    id(id), next(next), previous(previous), os(LINUX), taken(false){}
+            os(LINUX), id(id), next(next), previous(previous), taken(false){}
 
     ~Server() = default;
 
