@@ -98,7 +98,6 @@ public:
             || os < LINUX || os > WINDOWS)
             return INVALID_INPUT;
 
-
         try {
             auto currentDataCenter = idTree->findData(dataCenterId);
 
@@ -130,7 +129,7 @@ public:
     }
 
     StatusType getDataCentersByOs(int os, int **dataCenters,int* numOfDataCenters){
-        if(dataCenters == NULL || numOfDataCenters == NULL || os < 0 || os > 1 ||*numOfDataCenters <= 0){
+        if(dataCenters == NULL || numOfDataCenters == NULL || os < 0 || os > 1){
             return INVALID_INPUT;
         }
         *numOfDataCenters = numberOfDataCenters;
