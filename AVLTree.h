@@ -115,9 +115,9 @@ private:
     void getKeysInOrderAux(Key** keys, int numOfKeys, int* index, AVLNode<Data>* node){
         if( *index >= numOfKeys || node == nullptr)
             return;
-        GetKeysInOrderAux(keys,numOfKeys,index,node->getLeftSon());
+        getKeysInOrderAux(keys,numOfKeys,index,node->getLeftSon());
         keys[(*index)++] = *(*(node->getCurrentData()));
-        GetKeysInOrderAux(keys,numOfKeys,index,node->getRightSon());
+        getKeysInOrderAux(keys,numOfKeys,index,node->getRightSon());
     }
     /**
      * remove the tree which r is its root bt post order
