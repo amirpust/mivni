@@ -40,7 +40,6 @@ public:
     };
 
     /**
-     *
      * @param data
      * @throws OutOfMemory
      * @throws AlreadyExists

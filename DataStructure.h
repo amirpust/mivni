@@ -66,9 +66,11 @@ public:
         if (dataCenterID <= 0)
             return INVALID_INPUT;
 
+
         try{
-            windowsTree->remove(dataCenterID);
-            linuxTree->remove(dataCenterID);
+            auto currentData = idTree->findData(dataCenterID);
+            windowsTree->remove(*currentData);
+            linuxTree->remove(*currentData);
             idTree->remove(dataCenterID);
         }catch(DataStructureException& d){
             return d.statusType;
@@ -103,9 +105,9 @@ public:
 
             DataCenterStatus result = currentDataCenter->requestServer(serverID, os, assignedID);
             if (result == SUCCESS_CHANGE_OS_DC) {
-                windowsTree->remove(currentDataCenter);
+                windowsTree->remove(*currentDataCenter);
                 windowsTree->insert(currentDataCenter);
-                linuxTree->remove(currentDataCenter);
+                linuxTree->remove(*currentDataCenter);
                 linuxTree->insert(currentDataCenter);
             }
         }catch(DataStructureException& d){

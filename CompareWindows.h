@@ -7,11 +7,11 @@
 class CompareWindows {
 public:
     int operator()(DataCenter &dataCenter1, DataCenter &dataCenter2) {
-        int result = dataCenter1.getwindowsServerNumber() - dataCenter2.getwindowsServerNumber();
+        int result = dataCenter2.getwindowsServerNumber() - dataCenter1.getwindowsServerNumber();
 
-        if (result)
+        if (result != 0)
             return result;
-        return dataCenter2.getDataCenterId()- dataCenter1.getDataCenterId();
+        return dataCenter1.getDataCenterId()- dataCenter2.getDataCenterId();
     }
 
     int operator()(DataCenter &dataCenter,int key){

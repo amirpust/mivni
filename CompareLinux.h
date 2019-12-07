@@ -15,11 +15,11 @@ public:
      * Negative int otherwise.
      */
     int operator()(DataCenter &dataCenter1, DataCenter &dataCenter2) const {
-        int result = dataCenter1.getLinuxServerNumber() - dataCenter2.getLinuxServerNumber();
+        int result = dataCenter2.getLinuxServerNumber() - dataCenter1.getLinuxServerNumber();
 
         if (result)
             return result;
-        return dataCenter2.getDataCenterId() - dataCenter2.getDataCenterId();
+        return dataCenter1.getDataCenterId() - dataCenter2.getDataCenterId();
     }
 
 
