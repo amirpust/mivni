@@ -132,29 +132,22 @@ public:
         if(dataCenters == NULL || numOfDataCenters == NULL || os < 0 || os > 1){
             return INVALID_INPUT;
         }
-        *numOfDataCenters = numberOfDataCenters;
-        try {
-            *dataCenters = (int*)malloc(sizeof(int)*(*numOfDataCenters)) ;
-            if (*dataCenters == NULL)
-                return ALLOCATION_ERROR;
-        }catch (exception& e){
-            cout << "OS: " << os << endl;//TODO: Debugging delete before submission
-            cout << "Num of servers: " << *numOfDataCenters << endl;
-
-            cout << e.what() << endl;
+        *dataCenters = (int*)malloc(sizeof(int)*numberOfDataCenters) ;
+        if (*dataCenters == NULL) {
             return ALLOCATION_ERROR;
         }
+
         try {
             if(os == WINDOWS){
-                windowsTree->getKeysInOrder(dataCenters,*numOfDataCenters);
+                windowsTree->getKeysInOrder(dataCenters,numberOfDataCenters);
             }else{
-                linuxTree->getKeysInOrder(dataCenters,*numOfDataCenters);
+                linuxTree->getKeysInOrder(dataCenters,numberOfDataCenters);
             }
         }catch (DataStructureException& d){
             return d.statusType;
         }
+        *numOfDataCenters = numberOfDataCenters;
         return SUCCESS;
-
     }
 
 };

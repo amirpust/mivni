@@ -104,7 +104,7 @@ public:
      * @param numOfKeys
      * @throws DoesntExists - in case of empty tree
      */
-    void getKeysInOrder(Key** keys, int numOfKeys){
+    void getKeysInOrder(Key** keys, const int numOfKeys){
         int index = 0;
         if(root->getLeftSon() == nullptr)
             throw DoesntExists();
@@ -112,11 +112,12 @@ public:
     }
 
 private:
-    void getKeysInOrderAux(Key** keys, int numOfKeys, int* index, AVLNode<Data>* node){
+    void getKeysInOrderAux(Key** keys, const int numOfKeys, int* index, AVLNode<Data>* node){
         if( *index >= numOfKeys || node == nullptr)
             return;
         getKeysInOrderAux(keys,numOfKeys,index,node->getLeftSon());
-        keys[(*index)++] = *(*(node->getCurrentData()));
+        (*keys)[(*index)] = *(*(node->getCurrentData()));
+        *index = *index + 1;
         getKeysInOrderAux(keys,numOfKeys,index,node->getRightSon());
     }
     /**
