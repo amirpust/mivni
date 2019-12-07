@@ -66,8 +66,8 @@ public:
      */
     DataCenterStatus freeServer(int serverId);
 
-    int* operator*() {
-        return &dataCenterID;
+    int operator*() {
+        return dataCenterID;
     }
 
     virtual ~DataCenter();
