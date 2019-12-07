@@ -55,7 +55,7 @@ public:
         assert( father != nullptr);
         AVLNode<Data>* newNode;
         try{
-            newNode = new AVLNode<Data>(data,father);
+            newNode = new AVLNode<Data>(data);
         }catch(exception& e) {
             throw OutOfMemory();
         }
@@ -151,6 +151,7 @@ private:
         AVLNode<Data>* updateFrom = nullptr;
         AVLNode<Data>* replaceBy = findReplacement(node, updateFrom);
         assert(updateFrom != nullptr);
+        assert(replaceBy != node);
 
         //Sets the replacement sons
         replaceBy->setRightSon(node->getRightSon());
@@ -165,6 +166,9 @@ private:
         if(isManagedMemory)
             delete node->getCurrentData();
 
+        if(updateFrom == node)
+            updateFrom = replaceBy;
+        delete node;
         updateTree(updateFrom);
     }
 
