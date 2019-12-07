@@ -12,6 +12,7 @@ int main(){
     int Id = 0;
     if(ds->requestServerFromDataCenter(456,0,1,&Id) == SUCCESS){
         cout << "success" <<endl;
+        cout << Id <<endl;
     }else{
         cout << "check request server"<< endl;
     }

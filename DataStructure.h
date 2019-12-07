@@ -130,10 +130,16 @@ public:
         if(dataCenters == NULL || numOfDataCenters == NULL || os < 0 || os > 1){
             return INVALID_INPUT;
         }
+        if(*numOfDataCenters <= 0)
+            return SUCCESS; //TODO: Check what to return (Success in empty way)
 
         try {
             dataCenters = new int*[*numOfDataCenters]();
         }catch (exception& e){
+            cout << "OS: " << os << endl;//TODO: Debugging delete before submission
+            cout << "Num of servers: " << *numOfDataCenters << endl;
+
+            cout << e.what() << endl;
             return ALLOCATION_ERROR;
         }
         try {

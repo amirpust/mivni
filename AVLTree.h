@@ -187,7 +187,7 @@ private:
         while(temp != nullptr){
             if(compare(*(temp->getCurrentData()), key) == 0)
                 return temp;
-            if(compare(*(temp->getCurrentData()), key) > 0)
+            if(compare(*(temp->getCurrentData()), key) < 0)
                 temp = temp->getRightSon();
             else
                 temp = temp->getLeftSon();
