@@ -1,9 +1,8 @@
 #ifndef _COMPAREWINDOWS_H
 #define _COMPAREWINDOWS_H
 
-#include "memory"
 #include "DataCenter.h"
-using std::shared_ptr;
+
 
 class CompareWindows {
 public:

@@ -36,19 +36,20 @@ public:
         if (numOfServers <= 0 || dataCenterId <= 0)
             return INVALID_INPUT;
 
-        if (idTree->findData(dataCenterId) != nullptr) {
-            return FAILURE;
-        }
+        DataCenter* currentData = nullptr;
         try{
-            auto currentData = new DataCenter(dataCenterId, numOfServers);
+           currentData = new DataCenter(dataCenterId, numOfServers);
 
             idTree->insert(currentData);
             linuxTree->insert(currentData);
             windowsTree->insert(currentData);
 
             return SUCCESS;
+        }catch (std::bad_alloc& ba){
+            return ALLOCATION_ERROR;
         }
         catch(DataStructureException& d){
+            delete currentData;
             return d.statusType;
         }
     }
@@ -65,14 +66,13 @@ public:
         if (dataCenterID <= 0)
             return INVALID_INPUT;
 
-
-        if (idTree->findData(dataCenterID) == nullptr) {
-            return FAILURE;
+        try{
+            windowsTree->remove(dataCenterID);
+            linuxTree->remove(dataCenterID);
+            idTree->remove(dataCenterID);
+        }catch(DataStructureException& d){
+            return d.statusType;
         }
-
-        windowsTree->remove(dataCenterID);
-        linuxTree->remove(dataCenterID);
-        idTree->remove(dataCenterID);
 
         return SUCCESS;
     }
@@ -97,13 +97,10 @@ public:
             || os < LINUX || os > WINDOWS)
             return INVALID_INPUT;
 
-        auto currentDataCenter = idTree->findData(dataCenterId);
-
-
-        if (currentDataCenter == nullptr)
-            return FAILURE;
 
         try {
+            auto currentDataCenter = idTree->findData(dataCenterId);
+
             DataCenterStatus result = currentDataCenter->requestServer(serverID, os, assignedID);
             if (result == SUCCESS_CHANGE_OS_DC) {
                 windowsTree->remove(dataCenterId);
