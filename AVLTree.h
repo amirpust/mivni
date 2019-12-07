@@ -91,6 +91,10 @@ public:
         removeNode(node);
     }
 
+    void remove(Data& data){
+        AVLNode<Data>* node = findNode(data);
+        removeNode(node);
+    }
 
 
     //TODO: for debugging - delete before sub
@@ -189,6 +193,19 @@ private:
             if(compare(*(temp->getCurrentData()), key) == 0)
                 return temp;
             if(compare(*(temp->getCurrentData()), key) < 0)
+                temp = temp->getRightSon();
+            else
+                temp = temp->getLeftSon();
+        }
+        throw DoesntExists();
+    }
+
+    AVLNode<Data>* findNode(Data& data){
+        AVLNode<Data>* temp = root->getLeftSon();
+        while(temp != nullptr){
+            if(compare(*(temp->getCurrentData()), data) == 0)
+                return temp;
+            if(compare(*(temp->getCurrentData()), data) < 0)
                 temp = temp->getRightSon();
             else
                 temp = temp->getLeftSon();
