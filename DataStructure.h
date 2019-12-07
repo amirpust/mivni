@@ -103,9 +103,9 @@ public:
 
             DataCenterStatus result = currentDataCenter->requestServer(serverID, os, assignedID);
             if (result == SUCCESS_CHANGE_OS_DC) {
-                windowsTree->remove(dataCenterId);
+                windowsTree->remove(currentDataCenter);
                 windowsTree->insert(currentDataCenter);
-                linuxTree->remove(dataCenterId);
+                linuxTree->remove(currentDataCenter);
                 linuxTree->insert(currentDataCenter);
             }
         }catch(DataStructureException& d){
@@ -118,6 +118,7 @@ public:
     StatusType freeServerFromDataCenter(int dataCenterID, int serverID) {
         if (serverID < 0 || dataCenterID <= 0)
             return INVALID_INPUT;
+
         try {
             auto currentDataCenter = idTree->findData(dataCenterID);
             currentDataCenter->freeServer(serverID);

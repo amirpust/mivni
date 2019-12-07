@@ -9,41 +9,49 @@ using std::exception;
 class DataStructureException: public exception{
 public:
     StatusType statusType;
+    explicit DataStructureException(StatusType s):statusType(s){};
 };
 
 class OutOfMemory : public DataStructureException{
 public:
-    StatusType statusType = ALLOCATION_ERROR;
+    OutOfMemory():
+            DataStructureException(ALLOCATION_ERROR){};
 };
 
 class AlreadyExists: public DataStructureException{
 public:
-    StatusType statusType = FAILURE;
+    AlreadyExists():
+            DataStructureException(FAILURE){};
 };
 
 class InvalidInput: public DataStructureException{
 public:
-    StatusType statusType = INVALID_INPUT;
+    InvalidInput():
+            DataStructureException(INVALID_INPUT){};
 };
 
 class NullArg: public DataStructureException{
 public:
-    StatusType statusType = FAILURE;
+    NullArg():
+            DataStructureException(FAILURE){};
 };
 
 class DoesntExists: public DataStructureException{
 public:
-    StatusType statusType = FAILURE;
+    DoesntExists():
+            DataStructureException(FAILURE){};
 };
 
 class NoFreeServers: public DataStructureException{
 public:
-    StatusType statusType = FAILURE;
+    NoFreeServers():
+            DataStructureException(FAILURE){};
 };
 
 class AlreadyFree: public DataStructureException{
 public:
-    StatusType statusType = FAILURE;
+    AlreadyFree():
+            DataStructureException(FAILURE){};
 };
 
 

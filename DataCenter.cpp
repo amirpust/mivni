@@ -198,7 +198,7 @@ DataCenterStatus DataCenter::freeServer(int serverId) {
     if (serverId >= numberOfServers || serverId < 0) {
         throw InvalidInput();
     }
-    if (!pointerArray[serverId]->isTaken()) {
+    if (pointerArray[serverId]->isTaken() == false) {
         throw AlreadyFree();
     }
 
