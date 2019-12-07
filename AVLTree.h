@@ -136,40 +136,31 @@ private:
     }
 
     void removeNode(AVLNode<Data>* node){
+        AVLNode<Data>* replacement = nullptr;
+        AVLNode<Data>* repFather = nullptr;
+
+        findReplacement(node, replacement,repFather);
+
         bool nodeIsRightSon = node->getFather()->getRightSon()==node;
-        if(node->getRightSon() == nullptr){
-            if(nodeIsRightSon)
-                node->getFather()->setRightSon(node->getLeftSon());
-            else
-                node->getFather()->setLeftSon(node->getLeftSon());
-
-            if(isManagedMemory)
-                delete node->getCurrentData();
-            delete node;
-            return;
-        }
-        AVLNode<Data>* updateFrom = nullptr;
-        AVLNode<Data>* replaceBy = findReplacement(node, updateFrom);
-        assert(updateFrom != nullptr);
-        assert(replaceBy != node);
-
-        //Sets the replacement sons
-        replaceBy->setRightSon(node->getRightSon());
-        replaceBy->setLeftSon(node->getLeftSon());
-
-        //set the father ti point on the replacement
         if(nodeIsRightSon)
-            node->getFather()->setRightSon(replaceBy);
+            node->getFather()->setRightSon(replacement);
         else
-            node->getFather()->setLeftSon(replaceBy);
+            node->getFather()->setLeftSon(replacement);
+
+        if(node->getRightSon() == nullptr){
+
+        }else if(node->getRightSon() == replacement){
+            replacement->setLeftSon(node->getLeftSon());
+        }else{
+            repFather->setLeftSon(replacement->getRightSon());
+            replacement->setLeftSon(node->getLeftSon());
+            replacement->setRightSon(node->getRightSon());
+        }
 
         if(isManagedMemory)
             delete node->getCurrentData();
-
-        if(updateFrom == node)
-            updateFrom = replaceBy;
         delete node;
-        updateTree(updateFrom);
+        updateTree(repFather);
     }
 
     //TODO: for debugging
@@ -263,16 +254,21 @@ private:
      * @param node
      * @return
      */
-    static AVLNode<Data>* findReplacement(const AVLNode<Data>* node, AVLNode<Data>*& updateFrom){
-        AVLNode<Data>* iterator = node->getRightSon();
-        assert(iterator != nullptr);
-        while(iterator->getLeftSon() != nullptr)
-            iterator = iterator->getLeftSon();
-
-        updateFrom = iterator->getFather();
-        iterator->getFather()->setLeftSon(iterator->getRightSon());
-
-        return iterator;
+    void findReplacement(const AVLNode<Data>* nodeToReplace,AVLNode<Data>* replacement ,AVLNode<Data>* repFather){
+        assert(nodeToReplace != nullptr);
+        if(nodeToReplace->getRightSon() == nullptr){
+            replacement = nodeToReplace->getLeftSon();
+            repFather = nodeToReplace->getFather();
+        }else if(nodeToReplace->getRightSon()->getLeftSon() == nullptr){
+            replacement = nodeToReplace->getRightSon();
+            repFather = replacement;
+        }else{
+            AVLNode<Data>* iter = nodeToReplace->getRightSon();
+            while(iter->getLeftSon() != nullptr)
+                iter = iter->getLeftSon();
+            replacement = iter;
+            repFather = iter->getFather();
+        }
     }
 
     /**
