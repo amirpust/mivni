@@ -280,7 +280,6 @@ private:
 
     //Rolls
     static void rollRR(AVLNode<Data>* nodeToRoll){
-        assert(nodeToRoll != nullptr);
         bool isRightSon = nodeToRoll->getFather()->getRightSon() == nodeToRoll;
 
         AVLNode<Data>* temp = nodeToRoll->getRightSon();
