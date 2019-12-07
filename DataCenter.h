@@ -34,9 +34,9 @@ public:
 
     const bool operator==(const DataCenter &dataCenter) const;
 
-    const bool operator>(const int key) const;
+    const bool operator>(int key) const;
 
-    const bool operator==(const int key) const;
+    const bool operator==(int key) const;
 
     /**
      * This function decides if the server is free, if so it assigns it with the
@@ -52,7 +52,7 @@ public:
      * SUCCESS_DC - if succeeded and os stayed the same
      * SUCCESS_CHANGE_OS_DC - if succeeded and
      */
-    DataCenterStatus requestServer(const int requestedId, const int os, int *assignedServerId);
+    DataCenterStatus requestServer(int requestedId, int os, int *assignedServerId);
 
 
     /**
@@ -66,8 +66,8 @@ public:
      */
     DataCenterStatus freeServer(int serverId);
 
-    const int operator*() const {
-        return dataCenterID;
+    const int* operator*() const {
+        return &dataCenterID;
     }
 
     virtual ~DataCenter();
