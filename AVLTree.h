@@ -115,9 +115,9 @@ private:
     void getKeysInOrderAux(Key** keys, int numOfKeys, int* index, AVLNode<Data>* node){
         if( *index >= numOfKeys || node == nullptr)
             return;
-        GetKeysInOrderAux(node->getLeftSon());
+        GetKeysInOrderAux(keys,numOfKeys,index,node->getLeftSon());
         keys[(*index)++] = *(*(node->getCurrentData()));
-        GetKeysInOrderAux(node->getRightSon());
+        GetKeysInOrderAux(keys,numOfKeys,index,node->getRightSon());
     }
     /**
      * remove the tree which r is its root bt post order
@@ -185,9 +185,9 @@ private:
     AVLNode<Data>* findNode(Key key){
         AVLNode<Data>* temp = root->getLeftSon();
         while(temp != nullptr){
-            if(compare(temp->getCurrentData(), key) == 0)
+            if(compare(*(temp->getCurrentData()), key) == 0)
                 return temp;
-            if(compare(temp->getCurrentData(), key) > 0)
+            if(compare(*(temp->getCurrentData()), key) > 0)
                 temp = temp->getRightSon();
             else
                 temp = temp->getLeftSon();
@@ -213,11 +213,11 @@ private:
         }
 
         while(temp != nullptr){
-            if(compare(temp->getCurrentData(),data) == 0){
+            if(compare(*(temp->getCurrentData()),*data) == 0){
                 *son = tempSon;
                 throw AlreadyExists();
             }
-            if(compare(data, temp->getCurrentData()) > 0){
+            if(compare(*data, *(temp->getCurrentData())) > 0){
                 if(temp->getRightSon() == nullptr){
                     *son = rightSon;
                     return temp;
