@@ -139,7 +139,7 @@ private:
         AVLNode<Data>* replacement = nullptr;
         AVLNode<Data>* repFather = nullptr;
 
-        findReplacement(node, replacement,repFather);
+        findReplacement(node, &replacement,&repFather);
 
         bool nodeIsRightSon = node->getFather()->getRightSon()==node;
         if(nodeIsRightSon)
@@ -254,20 +254,20 @@ private:
      * @param node
      * @return
      */
-    void findReplacement(const AVLNode<Data>* nodeToReplace,AVLNode<Data>* replacement ,AVLNode<Data>* repFather){
+    void findReplacement(const AVLNode<Data>* nodeToReplace,AVLNode<Data>** replacement ,AVLNode<Data>** repFather){
         assert(nodeToReplace != nullptr);
         if(nodeToReplace->getRightSon() == nullptr){
-            replacement = nodeToReplace->getLeftSon();
-            repFather = nodeToReplace->getFather();
+            *replacement = nodeToReplace->getLeftSon();
+            *repFather = nodeToReplace->getFather();
         }else if(nodeToReplace->getRightSon()->getLeftSon() == nullptr){
-            replacement = nodeToReplace->getRightSon();
-            repFather = replacement;
+            *replacement = nodeToReplace->getRightSon();
+            *repFather = *replacement;
         }else{
             AVLNode<Data>* iter = nodeToReplace->getRightSon();
             while(iter->getLeftSon() != nullptr)
                 iter = iter->getLeftSon();
-            replacement = iter;
-            repFather = iter->getFather();
+            *replacement = iter;
+            *repFather = iter->getFather();
         }
     }
 
