@@ -1,7 +1,7 @@
 #include "DataCenter.h"
 
 DataCenter::DataCenter(int dataCenterId, int numberOfServers)
-        : dataCenterID(dataCenterId){
+        : dataCenterID(dataCenterId),numberOfServers(numberOfServers + 1){
 
     initializePointerArray();
 
@@ -22,8 +22,6 @@ DataCenter::DataCenter(int dataCenterId, int numberOfServers)
 
     windowsListEnd->setPrevious(windowsListHead);
     windowsListHead->setNext(windowsListEnd);
-
-    unusedServers = numberOfServers;
 
     initializeListAndPointerArray();
 }
