@@ -20,8 +20,6 @@ public:
 
     virtual ~DataStructure();
 
-//TODO check allocation problem with catch throw
-//TODO wrote new
 /**
  *
  * @param dataCenterId

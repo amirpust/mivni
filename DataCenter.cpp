@@ -66,7 +66,7 @@ void DataCenter::initializeListAndPointerArray() {
 
     Server* firstServer;
     try {
-        firstServer = new Server(0); //TODO: OOM throw
+        firstServer = new Server(0);
     }catch(exception& e) {
         delete pointerArray;
         delete linuxListEnd;
