@@ -9,8 +9,8 @@
 template<class Data, class Key>
 class AVLNode {
 private:
-    Data &currentData;
-    const Key &key;
+    Data *currentData;
+    const Key *key;
     AVLNode<Data, Key> *father;
     AVLNode<Data, Key> *rightSon;
     AVLNode<Data, Key> *leftSon;
@@ -19,7 +19,7 @@ private:
     int bf;
 
 public:
-    AVLNode(Data &currentData, const Key &key, AVLNode<Data, Key> *father = nullptr, AVLNode<Data, Key> *rightSon = nullptr,
+    AVLNode(Data *currentData, const Key *key, AVLNode<Data, Key> *father = nullptr, AVLNode<Data, Key> *rightSon = nullptr,
             AVLNode<Data, Key> *leftSon = nullptr, int nodeHeight = 0, int bf = 0)
             : currentData(currentData), key(key), father(father),
               rightSon(rightSon), leftSon(leftSon),
@@ -73,11 +73,11 @@ public:
             leftSon->setFather(this);
     };
 
-    Data &getCurrentData() const {
+    Data *getCurrentData() const {
         return currentData;
     }
 
-    const Key &getKey() const {
+    const Key *getKey() const {
         return key;
     }
 

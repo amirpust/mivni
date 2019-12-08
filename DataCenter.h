@@ -3,9 +3,7 @@
 
 #include "Server.h"
 #include "DataStructureExceptions.h"
-typedef enum {
-    ALLOCATION_ERROR_DC, INVALID_INPUT_DC, FAILURE_DC, SUCCESS_CHANGE_OS_DC,SUCCESS_DC
-} DataCenterStatus;
+
 
 class DataCenter {
     int dataCenterID;
@@ -46,25 +44,18 @@ public:
      * @param os
      * @param assignedServerId
      * @return
-     * FAILURE_DC - there are no more free servers to assign.
-     * INVALID_INPUT_DC - if serverId >= number of servers or serverId < 0 or
-     *                 OS < 0 or OS > 1 or assignedId = NULL
-     * SUCCESS_DC - if succeeded and os stayed the same
-     * SUCCESS_CHANGE_OS_DC - if succeeded and
+     * true - if the number of os servers was changed.
+     * false - otherwise.
      */
-    DataCenterStatus requestServer(int requestedId, int os, int *assignedServerId);
+    bool requestServer(int requestedId, int os, int *assignedServerId);
 
 
     /**
      *frees a given server and returns it to the end of the priority list of
      * free servers.
      * @param serverId
-     * @return
-     * INVALID_INPUT_DC - if serverId >= numOfServers or serverId < 0.
-     * FAILURE_DC - if the server is already freed.
-     * SUCCESS_DC - if succeeded
      */
-    DataCenterStatus freeServer(int serverId);
+    void freeServer(int serverId);
 
     int operator*() {
         return dataCenterID;

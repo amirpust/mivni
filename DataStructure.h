@@ -11,9 +11,9 @@
 
 
 class DataStructure {
-    AVLTree<DataCenter, int, CompareID> *idTree;
-    AVLTree<DataCenter, int, CompareLinux> *linuxTree;
-    AVLTree<DataCenter, int, CompareWindows> *windowsTree;
+    AVLTree<DataCenter, int> *idTree;
+    AVLTree<DataCenter, int> *linuxTree;
+    AVLTree<DataCenter, int> *windowsTree;
 
     int numberOfDataCenters;
 
@@ -103,8 +103,7 @@ public:
         try {
             auto currentDataCenter = idTree->findData(dataCenterId);
 
-            DataCenterStatus result = currentDataCenter->requestServer(serverID, os, assignedID);
-            if (result == SUCCESS_CHANGE_OS_DC) {
+            if (currentDataCenter->requestServer(serverID, os, assignedID)) {
                 windowsTree->remove(*currentDataCenter);
                 windowsTree->insert(currentDataCenter);
                 linuxTree->remove(*currentDataCenter);
