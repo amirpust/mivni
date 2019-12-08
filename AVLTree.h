@@ -44,14 +44,12 @@ public:
      * @throws AlreadyExists
      * @throws NullArg
      */
-    void insert(Data& data, const Key& key){
+    void insert(Data* data, const Key* key){
         if(data == nullptr || key == nullptr)
             throw NullArg();
 
-
-
         Sons son;
-        AVLNode<Data, Key>* father = findFather(key, &son);
+        AVLNode<Data, Key>* father = findFather(*key, &son);
 
         assert( father != nullptr);
         AVLNode<Data, Key>* newNode;
@@ -218,7 +216,7 @@ private:
  * @throws
  *  AlreadyExists
  */
-    AVLNode<Data, Key>* findFather(Key& key, Sons* son){
+    AVLNode<Data, Key>* findFather(Key* key, Sons* son){
         AVLNode<Data, Key>* toCheck = root->getLeftSon();
         if(toCheck == nullptr){
             *son = leftSon;
@@ -226,9 +224,9 @@ private:
         }
 
         while(toCheck!= nullptr){
-            if( key == toCheck->getKey()){
+            if( *key == *toCheck->getKey()){
                 throw AlreadyExists();
-            }else if(key > toCheck->getKey()){
+            }else if(*key > *toCheck->getKey()){
                 if(toCheck->getRightSon() == nullptr){
                     *son = rightSon;
                     return toCheck;
