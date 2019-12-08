@@ -9,7 +9,7 @@
 #include <exception>
 
 
-
+//TODO: when inserting to OSTree data = DataCenterID, key = OSKey
 class DataStructure {
     AVLTree<DataCenter, int> *idTree;
     AVLTree<DataCenter, int> *linuxTree;

@@ -19,7 +19,8 @@ private:
     int bf;
 
 public:
-    AVLNode(Data *currentData, const Key *key, AVLNode<Data, Key> *father = nullptr, AVLNode<Data, Key> *rightSon = nullptr,
+    AVLNode(Data *currentData, const Key *key, AVLNode<Data
+            , Key> *father = nullptr, AVLNode<Data, Key> *rightSon = nullptr,
             AVLNode<Data, Key> *leftSon = nullptr, int nodeHeight = 0, int bf = 0)
             : currentData(currentData), key(key), father(father),
               rightSon(rightSon), leftSon(leftSon),
