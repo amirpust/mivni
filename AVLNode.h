@@ -71,6 +71,7 @@ public:
     };
 
     void setRightSon(AVLNode<Data> *_rightSon) {
+        assert(_rightSon != this);
         this->rightSon = _rightSon;
         if (rightSon != nullptr)
             rightSon->setFather(this);

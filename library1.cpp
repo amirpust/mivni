@@ -46,5 +46,5 @@ void Quit(void** DS){
     if(!DS)
         return;
     delete *((DataStructure**)(DS));
-    *DS = nullptr;
+    *DS = NULL;
 }
