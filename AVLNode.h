@@ -6,13 +6,13 @@
 #include "Server.h"
 #include "DataCenter.h"
 
-template<class Data>
+template<class Data,class key>
 class AVLNode {
 private:
     Data *currentData;
-    AVLNode<Data> *father;
-    AVLNode<Data> *rightSon;
-    AVLNode<Data> *leftSon;
+    AVLNode<Data,key> *father;
+    AVLNode<Data,key> *rightSon;
+    AVLNode<Data,key> *leftSon;
     int nodeHeight;
     int bf;
 
