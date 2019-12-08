@@ -6,26 +6,28 @@
 #include "Server.h"
 #include "DataCenter.h"
 
-template<class Data,class key>
+template<class Data, class Key>
 class AVLNode {
 private:
-    Data *currentData;
-    AVLNode<Data,key> *father;
-    AVLNode<Data,key> *rightSon;
-    AVLNode<Data,key> *leftSon;
+    Data &currentData;
+    const Key &key;
+    AVLNode<Data, Key> *father;
+    AVLNode<Data, Key> *rightSon;
+    AVLNode<Data, Key> *leftSon;
+
     int nodeHeight;
     int bf;
 
 public:
+    AVLNode(Data &currentData, const Key &key, AVLNode<Data, Key> *father = nullptr, AVLNode<Data, Key> *rightSon = nullptr,
+            AVLNode<Data, Key> *leftSon = nullptr, int nodeHeight = 0, int bf = 0)
+            : currentData(currentData), key(key), father(father),
+              rightSon(rightSon), leftSon(leftSon),
+              nodeHeight(nodeHeight), bf(bf) {};
 
-    explicit AVLNode(Data *currentData, AVLNode<Data> *father = nullptr, AVLNode<Data> *rightSon = nullptr,
-                     AVLNode<Data> *leftSon = nullptr, int nodeHeight = 0, int bf = 0) :
-            currentData(currentData), father(father), rightSon(rightSon), leftSon(leftSon), nodeHeight(nodeHeight),
-            bf(bf) {};
-
-    Data *getCurrentData() const {
-        return currentData;
-    };
+    bool isRightSon()const{
+        return this->getFather()->getRightSon() == this;
+    }
 
     /**
  * update the heights and the BF.
@@ -46,45 +48,61 @@ public:
 
     virtual ~AVLNode() = default;
 
-    AVLNode<Data> *getFather() const {
-        return father;
-    };
-
-    AVLNode<Data> *getRightSon() const {
-        return rightSon;
-    };
-
-    AVLNode<Data> *getLeftSon() const {
-        return leftSon;
-    };
-
-    int getNodeHeight() const {
-        return nodeHeight;
-    };
-
-    int getBf() const {
-        return bf;
-    };
-
-    void setFather(AVLNode<Data> *_father) {
-        this->father = _father;
-    };
-
-    void setRightSon(AVLNode<Data> *_rightSon) {
+    void setRightSon(AVLNode<Data,Key> *_rightSon) {
         assert(_rightSon != this);
         this->rightSon = _rightSon;
         if (rightSon != nullptr)
             rightSon->setFather(this);
     };
 
-    void setLeftSon(AVLNode<Data> *_leftSon) {
+    void setFather(AVLNode<Data, Key> *_father) {
+        AVLNode::father = _father;
+    }
+
+    void setNodeHeight(int _nodeHeight) {
+        AVLNode::nodeHeight = _nodeHeight;
+    }
+
+    void setBf(int _bf) {
+        AVLNode::bf = _bf;
+    }
+
+    void setLeftSon(AVLNode<Data,Key> *_leftSon) {
         leftSon = _leftSon;
         if (leftSon != nullptr)
             leftSon->setFather(this);
     };
 
+    Data &getCurrentData() const {
+        return currentData;
+    }
+
+    const Key &getKey() const {
+        return key;
+    }
+
+    AVLNode<Data, Key> *getFather() const {
+        return father;
+    }
+
+    AVLNode<Data, Key> *getRightSon() const {
+        return rightSon;
+    }
+
+    AVLNode<Data, Key> *getLeftSon() const {
+        return leftSon;
+    }
+
+    int getNodeHeight() const {
+        return nodeHeight;
+    }
+
+    int getBf() const {
+        return bf;
+    }
+
 private:
-    int getSonHeight(AVLNode<Data> *son) {
+    int getSonHeight(AVLNode<Data,Key> *son) {
         if (son == nullptr)
             return -1;
         return son->getNodeHeight();
