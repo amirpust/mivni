@@ -135,7 +135,7 @@ private:
             return;
         removeAll(node->getLeftSon());
         removeAll(node->getRightSon());
-        removeNode(node);
+        delete node;
     }
 
     //Todo
