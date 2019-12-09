@@ -21,66 +21,34 @@ public:
     virtual ~DataStructure();
 
 /**
- *
+ * Inserts the dataCenter into the AVLTrees.
  * @param dataCenterId
  * @param numOfServers
  * @return
  * INVALID_INPUT - if numOfServers <= 0
  *                 or dataCenterID <= 0
- * FAILURE - if dataCenterID already exist
- * SUCCESS - if succeeded
+ * FAILURE - if dataCenterID already exist.
+ * SUCCESS - if succeeded.
+ * ALLOCATION_ERROR - if failed to allocate data.
  */
-    StatusType addDataCenter(int dataCenterId, int numOfServers) {
-        if (numOfServers <= 0 || dataCenterId <= 0)
-            return INVALID_INPUT;
-
-        try {
-            DataCenter currentData(dataCenterId, numOfServers);
-            OSKey windowsKey(WINDOWS, 0, dataCenterId);
-            OSKey linuxKey(LINUX, numOfServers, dataCenterId);
-
-            idTree->insert(currentData, dataCenterId);
-            windowsTree->insert(dataCenterId, windowsKey);
-            linuxTree->insert(dataCenterId, linuxKey);
-            numberOfDataCenters++;
-            return SUCCESS;
-        } catch (std::bad_alloc &ba) {
-            return ALLOCATION_ERROR;
-        }
-        catch (DataStructureException &d) {
-            return d.statusType;
-        }
-    }
+    StatusType addDataCenter(int dataCenterId, int numOfServers);
 
     /**
+     * Removes dataCenter from the AVLTrees.
      * @param dataCenterID
      * @return
      * INVALID_INPUT - if dataCenterID <= 0.
      * FAILURE - if dataCenter doesn't exist.
-     * SUCCESS - if succeeded
+     * SUCCESS - if succeeded.
+     * ALLOCATION_ERROR - if allocation fails.
      */
 
-    StatusType removeDataCenter(int dataCenterID) {
-        if (dataCenterID <= 0)
-            return INVALID_INPUT;
-
-        try {
-            auto currentData = idTree->findData(dataCenterID);
-            OSKey windowsKey(WINDOWS, currentData->getwindowsServerNumber(), dataCenterID);
-            OSKey linuxKey(LINUX, currentData->getLinuxServerNumber(), dataCenterID);
-
-            windowsTree->remove(windowsKey);
-            linuxTree->remove(linuxKey);
-            idTree->remove(dataCenterID);
-        } catch (DataStructureException &d) {
-            return d.statusType;
-        }
-        numberOfDataCenters--;
-
-        return SUCCESS;
-    }
+    StatusType removeDataCenter(int dataCenterID);
 
     /**
+     * Searches the requested dataCenter and gives a free server if one is
+     *      available.
+     * This function also maintain the order in the different trees.
      * @param dataCenterId
      * @param serverID
      * @param os
@@ -93,70 +61,40 @@ public:
      *                 or OS isn't in range.
      * FAILURE - dataCenterID doesn't exist
      *           or all servers are taken
-     * SUCCESS - all succeeded
+     * SUCCESS - if succeeded
+     * ALLOCATION_ERROR - if allocation fails.
      */
-    StatusType requestServerFromDataCenter(int dataCenterId, int serverID, int os, int *assignedID) {
-        if (dataCenterId <= 0 || assignedID == NULL || serverID < 0
-            || os < LINUX || os > WINDOWS)
-            return INVALID_INPUT;
+    StatusType requestServerFromDataCenter(int dataCenterId, int serverID
+            , int os, int *assignedID);
 
-        try {
-            auto currentDataCenter = idTree->findData(dataCenterId);
+    /**
+     *
+     * @param dataCenterID
+     * @param serverID
+     * @return
+     * INVALID_INPUT - if serverID < 0
+     *                 or dataCenterID <= 0.
+     * FAILURE - if dataCenterID doesn't match any key in the tree.
+     *           if the server is already free.
+     * SUCCESS - if succeeded
+     */
+    StatusType freeServerFromDataCenter(int dataCenterID, int serverID);
 
-            OSKey windowsKey(WINDOWS, currentDataCenter->getwindowsServerNumber(), dataCenterId);
-            OSKey linuxKey(LINUX, currentDataCenter->getLinuxServerNumber(), dataCenterId);
-
-            if (currentDataCenter->requestServer(serverID, os, assignedID)) {
-                windowsTree->remove(windowsKey);
-                windowsKey.setNumberOfServers(currentDataCenter->getwindowsServerNumber());
-                windowsTree->insert(dataCenterId, windowsKey);
-                linuxTree->remove(linuxKey);
-                linuxKey.setNumberOfServers(currentDataCenter->getLinuxServerNumber());
-                linuxTree->insert(dataCenterId, linuxKey);
-            }
-        } catch (DataStructureException &d) {
-            return d.statusType;
-        }
-
-        return SUCCESS;
-    }
-
-    StatusType freeServerFromDataCenter(int dataCenterID, int serverID) {
-        if (serverID < 0 || dataCenterID <= 0)
-            return INVALID_INPUT;
-
-        try {
-            auto currentDataCenter = idTree->findData(dataCenterID);
-            currentDataCenter->freeServer(serverID);
-        } catch (DataStructureException &d) {
-            return d.statusType;
-        }
-
-        return SUCCESS;
-    }
-
-    StatusType getDataCentersByOs(int os, int **dataCenters, int *numOfDataCenters) {
-        if (dataCenters == NULL || numOfDataCenters == NULL || os < 0 || os > 1) {
-            return INVALID_INPUT;
-        }
-        *dataCenters = (int *) malloc(sizeof(int) * numberOfDataCenters);
-        if (*dataCenters == NULL) {
-            return ALLOCATION_ERROR;
-        }
-
-        try {
-            if (os == WINDOWS) {
-                windowsTree->getDataInOrder(dataCenters, numberOfDataCenters);
-            } else {
-                linuxTree->getDataInOrder(dataCenters, numberOfDataCenters);
-            }
-        } catch (DataStructureException &d) {
-            free(*dataCenters);
-            return d.statusType;
-        }
-        *numOfDataCenters = numberOfDataCenters;
-        return SUCCESS;
-    }
+    /**
+     *
+     * @param os
+     * @param dataCenters
+     * @param numOfDataCenters
+     * @return
+     * INVALID_INPUT - if dataCenters is NULL
+     *                 or numOfDataCenters is NULL.
+     *                 or OS isn't 0 or 1.
+     * ALLOCATION_ERROR - if allocation fails.
+     * FAILURE - if the trees are empty.
+     * SUCCESS - if succeeded
+     */
+    StatusType getDataCentersByOs(int os, int **dataCenters
+            , int *numOfDataCenters);
 
 };
 

@@ -24,22 +24,27 @@ StatusType RemoveDataCenter(void *DS, int dataCenterID){
     return ((DataStructure*)(DS))->removeDataCenter(dataCenterID);
 }
 
-StatusType RequestServer(void *DS, int dataCenterID, int serverID, int os, int *assignedID){
+StatusType RequestServer(void *DS, int dataCenterID, int serverID, int os
+        , int *assignedID){
     if(!DS)
         return INVALID_INPUT;
-    return ((DataStructure*)(DS))->requestServerFromDataCenter(dataCenterID,serverID,os,assignedID);
+    return ((DataStructure*)(DS))->requestServerFromDataCenter(dataCenterID
+            ,serverID,os,assignedID);
 }
 
 StatusType FreeServer(void *DS, int dataCenterID, int serverID){
     if(!DS)
         return INVALID_INPUT;
-    return ((DataStructure*)(DS))->freeServerFromDataCenter(dataCenterID,serverID);
+    return ((DataStructure*)(DS))->freeServerFromDataCenter(dataCenterID
+            ,serverID);
 }
 
-StatusType GetDataCentersByOS(void *DS, int os, int **dataCenters, int* numOfDataCenters){
+StatusType GetDataCentersByOS(void *DS, int os, int **dataCenters
+        , int* numOfDataCenters){
     if(!DS)
         return INVALID_INPUT;
-    return ((DataStructure*)(DS))->getDataCentersByOs(os, dataCenters, numOfDataCenters);
+    return ((DataStructure*)(DS))->getDataCentersByOs(os, dataCenters
+            , numOfDataCenters);
 }
 
 void Quit(void** DS){

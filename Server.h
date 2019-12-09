@@ -19,63 +19,35 @@ public:
 
     ~Server() = default;
 
-    void setOs(int os) {
-        Server::os = os;
-    }
+    void setOs(int os);
 
-    int getOs(){
-        return os;
-    }
-    bool isTaken(){
-        return taken;
-    }
-    void setTaken(bool _taken){
-        this->taken = _taken;
-    }
+    int getOs();
 
-    int getId() const {
-        return id;
-    }
+    bool isTaken();
 
-    Server *getNext() const {
-        return next;
-    }
+    void setTaken(bool _taken);
 
-    Server *getPrevious() const {
-        return previous;
-    }
-    void setPrevious(Server *previous) {
-        Server::previous = previous;
-    }
-    void setNext(Server *next) {
-        Server::next = next;
-    }
+    int getId() const;
+
+    Server *getNext() const;
+
+    Server *getPrevious() const;
+
+    void setPrevious(Server *previous);
+
+    void setNext(Server *next);
 
     /**
      * Remove the Server from the list
      * Sets the next/previous to nullptr
      */
-    void removeServerFromList(){
-        if (previous != nullptr)
-            previous->setNext(next);
-        if (next != nullptr)
-            next->setPrevious(previous);
-        next = nullptr;
-        previous = nullptr;
-    }
+    void removeServerFromList();
     /**
      * Add the server to the list between the newnext to the newPrev
      * @param newNext
      * @param newPrev
      */
-    void addServerToList(Server* newNext, Server* newPrev){
-        next = newNext;
-        previous = newPrev;
-        if(newNext != nullptr)
-            newNext->setPrevious(this);
-        if(newPrev != nullptr)
-            newPrev->setNext(this);
-    }
+    void addServerToList(Server* newNext, Server* newPrev);
 
 
 private:

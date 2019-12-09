@@ -42,6 +42,12 @@ public:
      * @return
      * true - if the number of os servers was changed.
      * false - otherwise.
+     * @throws NoFreeServers
+     * @throws InvalidInput - if requestedId is bigger or equal to the number
+     *                          of servers in the DataCenter.
+     *                or if requestedId is a negative number.
+     *                or if the OS isn't 1 or 0.
+     *                or if the assignedServerId pointer is NULL.
      */
     bool requestServer(int requestedId, int os, int *assignedServerId);
 
@@ -49,20 +55,27 @@ public:
      *frees a given server and returns it to the end of the priority list of
      * free servers.
      * @param serverId
+     * @throws AlreadyFree.
+     * @throws InvalidInput - if serverId is bigger or equal to the number of
+     *                                 servers.
+     *                        or if serverId is negative.
      */
     void freeServer(int serverId);
 
-    int operator*() {
-        return dataCenterID;
-    }
+    int operator*();
 
     virtual ~DataCenter();
 
 private:
+
+    /**
+     * Allocates memory for the servers, inserts them into the lists and
+     * into to pointer array.
+     */
     void initializeListAndPointerArray();
 
 /**
- *
+ * If the preferred server is taken the function, gives a different server.
  * @param os
  * @param assignedServerId
  * @return
@@ -72,7 +85,7 @@ private:
     bool giveDifferentServer(int os, int *assignedServerId);
 
 /**
- *
+ * Finds the best option for an available.
  * @param serverId
  * @param os
  * @param assignedServer

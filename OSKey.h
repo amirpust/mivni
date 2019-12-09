@@ -23,29 +23,12 @@ public:
 /**
  * @param osNode
  * @return
- * true -  if 'this' number of servers smaller then the key sent.
+ * true -  if 'this' key is bigger than the other key.
  * false - otherwise.
  */
-    bool operator>(const OSKey &_key) const {
-        assert(osSystem == _key.osSystem);
+    bool operator>(const OSKey &_key) const;
 
-        if(numberOfServers < _key.numberOfServers)
-            return true;
-
-        if(numberOfServers > _key.numberOfServers)
-            return false;
-
-        if(dataCenterID > _key.dataCenterID)
-            return true;
-
-        return false;
-
-    }
-
-    bool operator==(const OSKey &_key) const {
-        assert(osSystem == _key.osSystem);
-        return (numberOfServers == _key.numberOfServers && dataCenterID == _key.dataCenterID);
-    }
+    bool operator==(const OSKey &_key) const;
 };
 
 

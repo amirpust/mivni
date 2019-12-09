@@ -270,3 +270,7 @@ DataCenter::DataCenter(DataCenter &toCopy) :
 
     initializeListAndPointerArray();
 }
+
+int DataCenter::operator*() {
+    return dataCenterID;
+}
