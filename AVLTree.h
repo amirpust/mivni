@@ -18,20 +18,21 @@ typedef enum{
 /** AVL Tree
  * To use this class, please send ad a template 2 classes.
  * @tparam: Data - the data the tree will keep.
- * operator* of Data will provide the key.
- * @tparam Compare - A function object that can Compare between 2 Data or
- * between Data to key
- *  positive number in case data1 > data2
- * negative number in case data1 < data2
- * 0 in case data1 == data2
+ * Requirments:
+ * operator =
+ * copyCtor (...)
+ * @tparam Key - the tree will arrange itself according to it.
+ * Requirments:
+ * operator ==
+ * operator >
+ * copyCtor (...)
  */
  template <class Data, class Key>
 class AVLTree {
     AVLNode<Data, Key>* root;  //Dummy Root - the left son is the real first node
-    bool isManagedMemory;
 public:
-    explicit AVLTree(bool _isManagedMemory = false) : isManagedMemory(_isManagedMemory){
-        root = new AVLNode<Data, Key>(nullptr);
+    explicit AVLTree(){
+       root = new AVLNode<Data, Key>(nullptr);
     };
     ~AVLTree(){
         removeAll(root->getLeftSon());
@@ -44,17 +45,14 @@ public:
      * @throws AlreadyExists
      * @throws NullArg
      */
-    void insert(Data* data, const Key* key){
-        if(data == nullptr || key == nullptr)
-            throw NullArg();
-
+    void insert(Data& data, const Key& key){
         Sons son;
-        AVLNode<Data, Key>* father = findFather(*key, &son);
+        AVLNode<Data, Key>* father = findFather(key, &son);
 
         assert( father != nullptr);
         AVLNode<Data, Key>* newNode;
         try{
-            newNode = new AVLNode<Data, Key>(data);
+            newNode = new AVLNode<Data, Key>(data,key);
         }catch(exception& e) {
             throw OutOfMemory();
         }
@@ -75,7 +73,7 @@ public:
      * @return Pointer to the data connected to this key
      * @throws DoesntExists
      */
-    Data* findData(Key key){
+    Data* findData(const Key& key){
         return findNode(key)->getCurrentData();
     }
 
@@ -84,16 +82,10 @@ public:
      * @param Key
      * @throws DoesntExists
      */
-    void remove(Key key){
+    void remove(const Key& key){
         AVLNode<Data, Key>* node = findNode(key);
         removeNode(node);
     }
-
-    void remove(Data& data){
-        AVLNode<Data, Key>* node = findNode(data);
-        removeNode(node);
-    }
-
 
     //TODO: for debugging - delete before sub
     void printInOrder(){
@@ -106,48 +98,58 @@ public:
      * @param numOfKeys
      * @throws DoesntExists - in case of empty tree
      */
-    void getKeysInOrder(Key** keys, const int numOfKeys){
+    void getDataInOrder(Data** data, const int numOfData){
         int index = 0;
         if(root->getLeftSon() == nullptr)
             throw DoesntExists();
-        getKeysInOrderAux(keys, numOfKeys, &index, root->getLeftSon());
+        getDataInOrderAux(data, numOfData, &index, root->getLeftSon());
     }
 
 private:
-    void getKeysInOrderAux(Key** keys, const int numOfKeys, int* index, AVLNode<Data, Key>* node){
-        if( *index >= numOfKeys || node == nullptr)
-            return;
-        getKeysInOrderAux(keys,numOfKeys,index,node->getLeftSon());
-        (*keys)[(*index)] = *(*(node->getCurrentData()));
-        *index = *index + 1;
-        getKeysInOrderAux(keys,numOfKeys,index,node->getRightSon());
-    }
+
     /**
-     * remove the tree which r is its root bt post order
-     * @param r
+     * TODO: explain
+     * @param data
+     * @param numOfData
+     * @param index
+     * @param node
      */
-    void removeAll(AVLNode<Data, Key>* r){
-        if(r == nullptr)
+    void getDataInOrderAux(Data** data, const int numOfData, int* index, AVLNode<Data, Key>* node){
+        if( *index >= numOfData || node == nullptr)
             return;
-        removeAll(r->getLeftSon());
-        removeAll(r->getRightSon());
-        removeNode(r);
+        getDataInOrderAux(data,numOfData,index,node->getLeftSon());
+        (*data)[(*index)] = *(node->getCurrentData());
+        *index = *index + 1;
+        getDataInOrderAux(data,numOfData,index,node->getRightSon());
     }
 
+    /** TODO: Explain
+     * remove the tree which r is its root bt post order
+     * @param node
+     */
+    void removeAll(AVLNode<Data, Key>* node){
+        if(node == nullptr)
+            return;
+        removeAll(node->getLeftSon());
+        removeAll(node->getRightSon());
+        removeNode(node);
+    }
+
+    //Todo
     void removeNode(AVLNode<Data, Key>* node){
         AVLNode<Data, Key>* replacement = nullptr;
         AVLNode<Data, Key>* repFather = nullptr;
 
         findReplacement(node, &replacement,&repFather);
 
-        bool nodeIsRightSon = node->getFather()->getRightSon()==node;
-        if(nodeIsRightSon)
+
+        if(node->isRightSon())
             node->getFather()->setRightSon(replacement);
         else
             node->getFather()->setLeftSon(replacement);
 
         if(node->getRightSon() == nullptr){
-
+            //No special treatment
         }else if(node->getRightSon() == replacement){
             replacement->setLeftSon(node->getLeftSon());
         }else{
@@ -156,8 +158,6 @@ private:
             replacement->setRightSon(node->getRightSon());
         }
 
-        if(isManagedMemory)
-            delete node->getCurrentData();
         delete node;
         updateTree(repFather);
     }
@@ -180,25 +180,12 @@ private:
  * @return AVLNode* of the Node that has the data or nullptr in case the data do not exists.
  * @throws DoesntExists
  */
-    AVLNode<Data, Key>* findNode(Key key){
+    AVLNode<Data, Key>* findNode(const Key& key){
         AVLNode<Data, Key>* temp = root->getLeftSon();
         while(temp != nullptr){
-            if(compare(*(temp->getCurrentData()), key) == 0)
+            if(key == temp->getKey())
                 return temp;
-            if(compare(*(temp->getCurrentData()), key) < 0)
-                temp = temp->getRightSon();
-            else
-                temp = temp->getLeftSon();
-        }
-        throw DoesntExists();
-    }
-
-    AVLNode<Data, Key>* findNode(Data& data){
-        AVLNode<Data, Key>* temp = root->getLeftSon();
-        while(temp != nullptr){
-            if(compare(*(temp->getCurrentData()), data) == 0)
-                return temp;
-            if(compare(*(temp->getCurrentData()), data) < 0)
+            if(key > temp->getKey())
                 temp = temp->getRightSon();
             else
                 temp = temp->getLeftSon();
@@ -216,17 +203,16 @@ private:
  * @throws
  *  AlreadyExists
  */
-    AVLNode<Data, Key>* findFather(Key* key, Sons* son){
+    AVLNode<Data, Key>* findFather(const Key& key, Sons* son){
         AVLNode<Data, Key>* toCheck = root->getLeftSon();
         if(toCheck == nullptr){
             *son = leftSon;
             return root;
         }
-
         while(toCheck!= nullptr){
-            if( *key == *toCheck->getKey()){
+            if( key == toCheck->getKey()){
                 throw AlreadyExists();
-            }else if(*key > *toCheck->getKey()){
+            }else if(key > toCheck->getKey()){
                 if(toCheck->getRightSon() == nullptr){
                     *son = rightSon;
                     return toCheck;
@@ -242,7 +228,7 @@ private:
         }
         assert(false); //not suppose to reach here
     }
-
+    //Todo
     /**findReplacement
      * find a replacement for the node, and reap it from it's place.
      * i.e. sets the replacements right son to its father as a left son
@@ -266,7 +252,7 @@ private:
             *repFather = iter->getFather();
         }
     }
-
+    //Todo
     /**
      * Update the Tree by Data < Operators.
      *
@@ -291,7 +277,7 @@ private:
         }
     }
 
-    //Rolls
+    //Todo: Rolls
     static void rollRR(AVLNode<Data, Key>* nodeToRoll){
         bool isRightSon = nodeToRoll->getFather()->getRightSon() == nodeToRoll;
 
