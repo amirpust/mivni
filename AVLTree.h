@@ -34,7 +34,7 @@ public:
        root = new AVLNode<Data, Key>(nullptr);
     };
     ~AVLTree(){
-        removeAll(root->getLeftSon());
+        treeClear();
         delete root;
     };
 
@@ -102,6 +102,10 @@ public:
         if(root->getLeftSon() == nullptr)
             throw DoesntExists();
         getDataInOrderAux(data, numOfData, &index, root->getLeftSon());
+    }
+
+    void treeClear(){
+        removeAll(root->getLeftSon());
     }
 
 private:
