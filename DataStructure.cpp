@@ -3,20 +3,20 @@
 DataStructure::DataStructure() {
     numberOfDataCenters = 0;
     try {
-        idTree = new AVLTree<DataCenter,int,CompareID>(true);
-    }catch (exception& e){
+        idTree = new AVLTree<DataCenter, int>();
+    } catch (exception &e) {
         throw OutOfMemory();
     }
     try {
-        linuxTree = new AVLTree<DataCenter,int,CompareLinux>();
-    }catch (exception& e){
+        linuxTree = new AVLTree<int, OSKey>();
+    } catch (exception &e) {
         delete idTree;
         throw OutOfMemory();
     }
 
     try {
-        windowsTree = new AVLTree<DataCenter,int,CompareWindows>();
-    }catch (exception& e){
+        windowsTree = new AVLTree<int, OSKey>();
+    } catch (exception &e) {
         delete idTree;
         delete linuxTree;
         throw OutOfMemory();

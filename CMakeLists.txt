@@ -3,7 +3,7 @@ project(mivni)
 
 set(CMAKE_CXX_STANDARD 11)
 set(SOURCE_FILES DataCenter.cpp DataStructure.cpp Server.cpp
-        CompareID.cpp CompareLinux.cpp CompareWindows.cpp main1.cpp OSKey.cpp OSKey.h)
+        CompareID.cpp CompareLinux.cpp CompareWindows.cpp main.cpp OSKey.cpp OSKey.h)
 set(HEADER_FILES AVLTree.h AVLNode.h DataCenter.h DataStructureExceptions.h
         DataStructure.h Server.h library1.h CompareInt.h CompareID.h CompareLinux.h CompareWindows.h library1.cpp OSKey.cpp OSKey.h)
 

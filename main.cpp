@@ -14,7 +14,7 @@
 #include "CompareInt.h"
 
 int main(){
-    AVLTree<int ,int ,CompareInt> tree;
+    AVLTree<int ,int > tree;
 
     //Specific Cases
 

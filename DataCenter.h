@@ -19,12 +19,27 @@ class DataCenter {
 
 public:
     DataCenter(int dataCenterId, int numberOfServers);
-    DataCenter(DataCenter& toCopy):
-    dataCenterID(toCopy.dataCenterID),numberOfServers(toCopy.numberOfServers)
-    ,linuxServerNumber(toCopy.linuxServerNumber)
-    ,windowsServerNumber(toCopy.windowsServerNumber)
-    ,unusedServers(toCopy.unusedServers){
 
+    DataCenter();
+
+    DataCenter(DataCenter &toCopy) :
+            dataCenterID(toCopy.dataCenterID), numberOfServers(toCopy.numberOfServers),
+            linuxServerNumber(toCopy.linuxServerNumber), windowsServerNumber(toCopy.windowsServerNumber),
+            unusedServers(toCopy.unusedServers) {
+
+        initializePointerArray();
+
+        initializeLinuxEnd();
+        initializeLinuxHead();
+        linuxListEnd->setPrevious(linuxListHead);
+        linuxListHead->setNext(linuxListEnd);
+
+        initializeWindowsEnd();
+        initializeWindowsHead();
+        windowsListEnd->setPrevious(windowsListHead);
+        windowsListHead->setNext(windowsListEnd);
+
+        initializeListAndPointerArray();
     };
 
     int getDataCenterId() const;
@@ -55,7 +70,6 @@ public:
      * false - otherwise.
      */
     bool requestServer(int requestedId, int os, int *assignedServerId);
-
 
     /**
      *frees a given server and returns it to the end of the priority list of

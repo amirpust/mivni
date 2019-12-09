@@ -9,8 +9,8 @@
 template<class Data, class Key>
 class AVLNode {
 private:
-    Data &currentData;
-    const Key &key;
+    Data currentData;
+    const Key key;
     AVLNode<Data, Key> *father;
     AVLNode<Data, Key> *rightSon;
     AVLNode<Data, Key> *leftSon;
@@ -30,7 +30,7 @@ public:
 
     //only to create the root
     explicit  AVLNode(AVLNode<Data, Key> *leftSon, int nodeHeight = 0, int bf = 0)
-            : leftSon(leftSon), nodeHeight(nodeHeight), bf(bf) {}
+            :key(Key()), leftSon(leftSon), nodeHeight(nodeHeight), bf(bf) {}
 
     bool isRightSon() const {
         return this->getFather()->getRightSon() == this;
@@ -80,8 +80,8 @@ public:
             leftSon->setFather(this);
     };
 
-    Data *getCurrentData() const {
-        return currentData;
+    Data *getCurrentData() {
+        return &currentData;
     }
 
     const Key &getKey() const {

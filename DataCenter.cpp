@@ -1,13 +1,13 @@
 #include "DataCenter.h"
 
 DataCenter::DataCenter(int dataCenterId, int numberOfServers)
-        : dataCenterID(dataCenterId),numberOfServers(numberOfServers + 1){
+        : dataCenterID(dataCenterId), numberOfServers(numberOfServers + 1) {
 
     initializePointerArray();
 
     linuxServerNumber = numberOfServers + 1;
     unusedServers = linuxServerNumber;
-    windowsServerNumber =  0;
+    windowsServerNumber = 0;
 
     initializeLinuxEnd();
 
@@ -26,18 +26,19 @@ DataCenter::DataCenter(int dataCenterId, int numberOfServers)
     initializeListAndPointerArray();
 }
 
-void DataCenter::initializeLinuxEnd(){
+void DataCenter::initializeLinuxEnd() {
     try {
         linuxListEnd = new Server(-1);
-    }catch (exception& e){
+    } catch (exception &e) {
         delete pointerArray;
         throw OutOfMemory();
     }
 }
-void DataCenter::initializePointerArray(){
-    try{
-        pointerArray = new Server*[numberOfServers];
-    }catch (exception& e){
+
+void DataCenter::initializePointerArray() {
+    try {
+        pointerArray = new Server *[numberOfServers];
+    } catch (exception &e) {
         throw OutOfMemory();
     }
 
@@ -60,13 +61,13 @@ int DataCenter::getwindowsServerNumber() const {
 }
 
 void DataCenter::initializeListAndPointerArray() {
-    if(numberOfServers == 0)
+    if (numberOfServers == 0)
         return;
 
-    Server* firstServer;
+    Server *firstServer;
     try {
         firstServer = new Server(0);
-    }catch(exception& e) {
+    } catch (exception &e) {
         delete pointerArray;
         delete linuxListEnd;
         delete linuxListHead;
@@ -76,16 +77,16 @@ void DataCenter::initializeListAndPointerArray() {
     }
 
 
-    firstServer->addServerToList(linuxListEnd,linuxListHead);
-    pointerArray[0]=firstServer;
+    firstServer->addServerToList(linuxListEnd, linuxListHead);
+    pointerArray[0] = firstServer;
 
     for (int i = 1; i < numberOfServers; ++i) {
         try {
-            auto temp = new  Server(i);
-            temp->addServerToList(linuxListEnd,pointerArray[i-1]);
+            auto temp = new Server(i);
+            temp->addServerToList(linuxListEnd, pointerArray[i - 1]);
             pointerArray[i] = temp;
-        }catch (exception& e){
-            for (int j = i-1; j >= 0; --j) {
+        } catch (exception &e) {
+            for (int j = i - 1; j >= 0; --j) {
                 pointerArray[j]->removeServerFromList();
                 delete pointerArray[j];
             }
@@ -134,38 +135,35 @@ void DataCenter::giveServer(int serverId, int *assignedServerId) {
 }
 
 bool DataCenter::giveFreeServer(int serverId, int os, int *assignedServer) {
-    if(pointerArray[serverId]->getOs() == os){
-        giveServer(serverId,assignedServer);
+    if (pointerArray[serverId]->getOs() == os) {
+        giveServer(serverId, assignedServer);
         return false;
-    }
-    else{
+    } else {
         pointerArray[serverId]->setOs(os);
-        giveServer(serverId,assignedServer);
+        giveServer(serverId, assignedServer);
         changeServerAmount(os);
         return true;
     }
 }
 
 bool DataCenter::giveDifferentServer(int os, int *assignedServerId) {
-    if(os == WINDOWS){
-        if(windowsListHead->getNext() != windowsListEnd){
-            giveServer(windowsListHead->getNext()->getId(),assignedServerId);
+    if (os == WINDOWS) {
+        if (windowsListHead->getNext() != windowsListEnd) {
+            giveServer(windowsListHead->getNext()->getId(), assignedServerId);
             return false;
-        }
-        else {
+        } else {
             linuxListHead->getNext()->setOs(os);
-            giveServer(linuxListHead->getNext()->getId(),assignedServerId);
+            giveServer(linuxListHead->getNext()->getId(), assignedServerId);
             changeServerAmount(os);
             return true;
         }
-    }
-    else{
-        if(linuxListHead->getNext()!=linuxListEnd){
-            giveServer(linuxListHead->getNext()->getId(),assignedServerId);
+    } else {
+        if (linuxListHead->getNext() != linuxListEnd) {
+            giveServer(linuxListHead->getNext()->getId(), assignedServerId);
             return false;
-        }else{
+        } else {
             windowsListHead->getNext()->setOs(os);
-            giveServer(windowsListHead->getNext()->getId(),assignedServerId);
+            giveServer(windowsListHead->getNext()->getId(), assignedServerId);
             changeServerAmount(os);
             return true;
         }
@@ -176,17 +174,17 @@ bool DataCenter::requestServer(const int requestedId, const int os, int *assigne
     if (unusedServers == 0)
         throw NoFreeServers();
     if (requestedId >= numberOfServers || requestedId < 0 || os > 1 || os < 0
-            || assignedServerId == NULL )
+        || assignedServerId == NULL)
         throw InvalidInput();
     if (!pointerArray[requestedId]->isTaken()) {
-        if(giveFreeServer(requestedId,os,assignedServerId)){
+        if (giveFreeServer(requestedId, os, assignedServerId)) {
             unusedServers--;
             return true;
         }
         unusedServers--;
         return false;
     }
-    if(giveDifferentServer(os,assignedServerId)){
+    if (giveDifferentServer(os, assignedServerId)) {
         unusedServers--;
         return true;
     }
@@ -227,7 +225,7 @@ DataCenter::~DataCenter() {
 void DataCenter::initializeWindowsHead() {
     try {
         windowsListHead = new Server(-4);
-    }catch (exception& e){
+    } catch (exception &e) {
         delete pointerArray;
         delete linuxListHead;
         delete linuxListEnd;
@@ -239,7 +237,7 @@ void DataCenter::initializeWindowsHead() {
 void DataCenter::initializeWindowsEnd() {
     try {
         windowsListEnd = new Server(-3);
-    }catch (exception& e){
+    } catch (exception &e) {
         delete pointerArray;
         delete linuxListEnd;
         delete linuxListHead;
@@ -257,3 +255,14 @@ void DataCenter::initializeLinuxHead() {
 
     }
 }
+
+DataCenter::DataCenter() : dataCenterID(0),
+                           numberOfServers(0),
+                           linuxServerNumber(0),
+                           windowsServerNumber(0),
+                           unusedServers(0),
+                           pointerArray(nullptr),
+                           linuxListHead(nullptr),
+                           linuxListEnd(nullptr),
+                           windowsListHead(nullptr),
+                           windowsListEnd(nullptr) {}

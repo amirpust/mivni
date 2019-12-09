@@ -7,13 +7,14 @@
 #include "DataCenter.h"
 #include "AVLTree.h"
 #include <exception>
+#include "OSKey.h"
 
 
 //TODO: when inserting to OSTree data = DataCenterID, key = OSKey
 class DataStructure {
     AVLTree<DataCenter, int> *idTree;
-    AVLTree<DataCenter, int> *linuxTree;
-    AVLTree<DataCenter, int> *windowsTree;
+    AVLTree<int, OSKey> *linuxTree;
+    AVLTree<int, OSKey> *windowsTree;
 
     int numberOfDataCenters;
 
@@ -36,19 +37,23 @@ public:
         if (numOfServers <= 0 || dataCenterId <= 0)
             return INVALID_INPUT;
 
-        DataCenter* currentData = nullptr;
-        try{
-           currentData = new DataCenter(dataCenterId, numOfServers);
+        DataCenter *currentData = nullptr;
+        OSKey *windowsKey = nullptr;
+        OSKey *linuxKey = nullptr;
+        try {
+            currentData = new DataCenter(dataCenterId, numOfServers);
+            windowsKey = new OSKey(WINDOWS, 0, dataCenterId);
+            linuxKey = new OSKey(LINUX, numOfServers + 1, dataCenterId);
 
-            idTree->insert(currentData);
-            linuxTree->insert(currentData);
-            windowsTree->insert(currentData);
+            idTree->insert(*currentData, dataCenterId);
+            windowsTree->insert(dataCenterId,*windowsKey);
+            linuxTree->insert(dataCenterId,*linuxKey);
             numberOfDataCenters++;
             return SUCCESS;
-        }catch (std::bad_alloc& ba){
+        } catch (std::bad_alloc &ba) {
             return ALLOCATION_ERROR;
         }
-        catch(DataStructureException& d){
+        catch (DataStructureException &d) {
             delete currentData;
             return d.statusType;
         }
@@ -66,13 +71,15 @@ public:
         if (dataCenterID <= 0)
             return INVALID_INPUT;
 
-
-        try{
+        try {
             auto currentData = idTree->findData(dataCenterID);
-            windowsTree->remove(*currentData);
-            linuxTree->remove(*currentData);
+            auto windowsKey = new OSKey(WINDOWS, currentData->getwindowsServerNumber(), dataCenterID);
+            auto linuxKey = new OSKey(LINUX, currentData->getLinuxServerNumber(), dataCenterID);
+    //TODO check OOM
+            windowsTree->remove(*windowsKey);
+            linuxTree->remove(*linuxKey);
             idTree->remove(dataCenterID);
-        }catch(DataStructureException& d){
+        } catch (DataStructureException &d) {
             return d.statusType;
         }
         numberOfDataCenters--;
@@ -102,14 +109,18 @@ public:
 
         try {
             auto currentDataCenter = idTree->findData(dataCenterId);
+            auto windowsKey = new OSKey(WINDOWS, currentDataCenter->getwindowsServerNumber(), dataCenterId);
+            auto linuxKey = new OSKey(LINUX, currentDataCenter->getLinuxServerNumber(), dataCenterId);
 
             if (currentDataCenter->requestServer(serverID, os, assignedID)) {
-                windowsTree->remove(*currentDataCenter);
-                windowsTree->insert(currentDataCenter);
-                linuxTree->remove(*currentDataCenter);
-                linuxTree->insert(currentDataCenter);
+                windowsTree->remove(*windowsKey);
+                windowsKey->setNumberOfServers(currentDataCenter->getwindowsServerNumber());
+                windowsTree->insert(dataCenterId,*windowsKey);
+                linuxTree->remove(*linuxKey);
+                linuxKey->setNumberOfServers(currentDataCenter->getLinuxServerNumber());
+                linuxTree->insert(dataCenterId,*linuxKey);
             }
-        }catch(DataStructureException& d){
+        } catch (DataStructureException &d) {
             return d.statusType;
         }
 
@@ -123,29 +134,29 @@ public:
         try {
             auto currentDataCenter = idTree->findData(dataCenterID);
             currentDataCenter->freeServer(serverID);
-        }catch (DataStructureException& d){
+        } catch (DataStructureException &d) {
             return d.statusType;
         }
 
         return SUCCESS;
     }
 
-    StatusType getDataCentersByOs(int os, int **dataCenters,int* numOfDataCenters){
-        if(dataCenters == NULL || numOfDataCenters == NULL || os < 0 || os > 1){
+    StatusType getDataCentersByOs(int os, int **dataCenters, int *numOfDataCenters) {
+        if (dataCenters == NULL || numOfDataCenters == NULL || os < 0 || os > 1) {
             return INVALID_INPUT;
         }
-        *dataCenters = (int*)malloc(sizeof(int)*numberOfDataCenters) ;
+        *dataCenters = (int *) malloc(sizeof(int) * numberOfDataCenters);
         if (*dataCenters == NULL) {
             return ALLOCATION_ERROR;
         }
 
         try {
-            if(os == WINDOWS){
-                windowsTree->getKeysInOrder(dataCenters,numberOfDataCenters);
-            }else{
-                linuxTree->getKeysInOrder(dataCenters,numberOfDataCenters);
+            if (os == WINDOWS) {
+                windowsTree->getDataInOrder(dataCenters, numberOfDataCenters);
+            } else {
+                linuxTree->getDataInOrder(dataCenters, numberOfDataCenters);
             }
-        }catch (DataStructureException& d){
+        } catch (DataStructureException &d) {
             return d.statusType;
         }
         *numOfDataCenters = numberOfDataCenters;

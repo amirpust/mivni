@@ -10,10 +10,13 @@ class OSKey {
 
 public:
     OSKey(int osSystem, int numberOfServers, int dataCenterId);
+    OSKey()= default;
 
 
     OSKey(const OSKey &toCopy) : osSystem(toCopy.osSystem),
     numberOfServers(toCopy.numberOfServers), dataCenterID(toCopy.dataCenterID) {};
+
+    void setNumberOfServers(int numberOfServers);
 
 
 //TODO check who comes before.

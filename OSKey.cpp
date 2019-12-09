@@ -6,3 +6,7 @@
 
 OSKey::OSKey(int osSystem, int numberOfServers, int dataCenterId) : osSystem(osSystem), numberOfServers(numberOfServers),
                                                               dataCenterID(dataCenterId) {}
+
+void OSKey::setNumberOfServers(int numberOfServers) {
+    OSKey::numberOfServers = numberOfServers;
+}
