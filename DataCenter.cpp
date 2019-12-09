@@ -1,11 +1,11 @@
 #include "DataCenter.h"
 
 DataCenter::DataCenter(int dataCenterId, int numberOfServers)
-        : dataCenterID(dataCenterId), numberOfServers(numberOfServers + 1) {
+        : dataCenterID(dataCenterId), numberOfServers(numberOfServers) {
 
     initializePointerArray();
 
-    linuxServerNumber = numberOfServers + 1;
+    linuxServerNumber = numberOfServers;
     unusedServers = linuxServerNumber;
     windowsServerNumber = 0;
 

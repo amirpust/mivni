@@ -37,7 +37,7 @@ public:
         try {
             DataCenter currentData(dataCenterId, numOfServers);
             OSKey windowsKey(WINDOWS, 0, dataCenterId);
-            OSKey linuxKey(LINUX, numOfServers + 1, dataCenterId);
+            OSKey linuxKey(LINUX, numOfServers, dataCenterId);
 
             idTree->insert(currentData, dataCenterId);
             windowsTree->insert(dataCenterId, windowsKey);
