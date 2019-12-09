@@ -9,8 +9,8 @@
 template<class Data, class Key>
 class AVLNode {
 private:
-    Data *currentData;
-    const Key *key;
+    Data &currentData;
+    const Key &key;
     AVLNode<Data, Key> *father;
     AVLNode<Data, Key> *rightSon;
     AVLNode<Data, Key> *leftSon;
@@ -19,14 +19,20 @@ private:
     int bf;
 
 public:
-    AVLNode(Data *currentData, const Key *key, AVLNode<Data
-            , Key> *father = nullptr, AVLNode<Data, Key> *rightSon = nullptr,
+
+    AVLNode(Data &currentData, const Key &key, AVLNode<Data, Key> *father = nullptr,
+            AVLNode<Data, Key> *rightSon = nullptr,
             AVLNode<Data, Key> *leftSon = nullptr, int nodeHeight = 0, int bf = 0)
             : currentData(currentData), key(key), father(father),
               rightSon(rightSon), leftSon(leftSon),
               nodeHeight(nodeHeight), bf(bf) {};
 
-    bool isRightSon()const{
+
+    //only to create the root
+    explicit  AVLNode(AVLNode<Data, Key> *leftSon, int nodeHeight = 0, int bf = 0)
+            : leftSon(leftSon), nodeHeight(nodeHeight), bf(bf) {}
+
+    bool isRightSon() const {
         return this->getFather()->getRightSon() == this;
     }
 
@@ -49,7 +55,7 @@ public:
 
     virtual ~AVLNode() = default;
 
-    void setRightSon(AVLNode<Data,Key> *_rightSon) {
+    void setRightSon(AVLNode<Data, Key> *_rightSon) {
         assert(_rightSon != this);
         this->rightSon = _rightSon;
         if (rightSon != nullptr)
@@ -68,7 +74,7 @@ public:
         AVLNode::bf = _bf;
     }
 
-    void setLeftSon(AVLNode<Data,Key> *_leftSon) {
+    void setLeftSon(AVLNode<Data, Key> *_leftSon) {
         leftSon = _leftSon;
         if (leftSon != nullptr)
             leftSon->setFather(this);
@@ -103,7 +109,7 @@ public:
     }
 
 private:
-    int getSonHeight(AVLNode<Data,Key> *son) {
+    int getSonHeight(AVLNode<Data, Key> *son) {
         if (son == nullptr)
             return -1;
         return son->getNodeHeight();
