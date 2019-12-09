@@ -229,7 +229,8 @@ private:
                 toCheck = toCheck->getLeftSon();
             }
         }
-        assert(false); //not suppose to reach here
+        return nullptr;
+
     }
 
     /**findReplacement

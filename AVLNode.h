@@ -30,7 +30,7 @@ public:
 
     //only to create the root
     explicit  AVLNode(AVLNode<Data, Key> *leftSon, int nodeHeight = 0, int bf = 0)
-            :key(Key()), leftSon(leftSon), nodeHeight(nodeHeight), bf(bf) {}
+            :key(Key()),father(nullptr),rightSon(nullptr), leftSon(leftSon), nodeHeight(nodeHeight), bf(bf) {}
 
     bool isRightSon() const {
         return this->getFather()->getRightSon() == this;

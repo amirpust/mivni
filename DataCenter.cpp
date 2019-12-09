@@ -215,7 +215,7 @@ DataCenter::~DataCenter() {
         delete pointerArray[i];
     }
 
-    delete pointerArray;
+    delete[] pointerArray;
     delete linuxListEnd;
     delete linuxListHead;
     delete windowsListEnd;

@@ -28,19 +28,18 @@ public:
  */
     bool operator>(const OSKey &_key) const {
         assert(osSystem == _key.osSystem);
-        int result = numberOfServers - _key.numberOfServers;
 
-        if (result > 0) {
+        if(numberOfServers < _key.numberOfServers)
+            return true;
+
+        if(numberOfServers > _key.numberOfServers)
             return false;
-        }
 
-        if (result == 0) {
-            result = dataCenterID - _key.dataCenterID;
-            if (result > 0)
-                return true;
-        }
+        if(dataCenterID > _key.dataCenterID)
+            return true;
 
         return false;
+
     }
 
     bool operator==(const OSKey &_key) const {
