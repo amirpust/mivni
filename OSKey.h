@@ -18,8 +18,6 @@ public:
 
     void setNumberOfServers(int numberOfServers);
 
-
-//TODO check who comes before.
 /**
  * @param osNode
  * @return

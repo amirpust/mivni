@@ -6,9 +6,6 @@
 #include "AVLNode.h"
 #include "DataStructureExceptions.h"
 
-//TODO: For debugging
-using namespace std;
-
 typedef enum{
     leftSon,
     rightSon
@@ -221,7 +218,7 @@ private:
         if(node == nullptr)
             return;
         printInOrderAux(node->getLeftSon());
-        cout << *(node->getCurrentData()) << endl;
+        std::cout << *(node->getCurrentData()) << std::endl;
         printInOrderAux(node->getRightSon());
 
     }

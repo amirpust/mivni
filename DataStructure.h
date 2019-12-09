@@ -7,7 +7,6 @@
 #include "OSKey.h"
 
 
-//TODO: when inserting to OSTree data = DataCenterID, key = OSKey
 class DataStructure {
     AVLTree<DataCenter, int> *idTree;
     AVLTree<int, OSKey> *linuxTree;
