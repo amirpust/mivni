@@ -10,9 +10,8 @@
 using namespace std;
 
 typedef enum{
-    leftSon = -1,
-    tempSon = 0,
-    rightSon = 1
+    leftSon,
+    rightSon
 }Sons;
 
 /** AVL Tree
@@ -228,7 +227,7 @@ private:
         }
         assert(false); //not suppose to reach here
     }
-    //Todo
+
     /**findReplacement
      * find a replacement for the node, and reap it from it's place.
      * i.e. sets the replacements right son to its father as a left son
@@ -252,9 +251,9 @@ private:
             *repFather = iter->getFather();
         }
     }
-    //Todo
+
     /**
-     * Update the Tree by Data < Operators.
+     *
      *
      * @param updateFrom
      */
@@ -277,7 +276,6 @@ private:
         }
     }
 
-    //Todo: Rolls
     static void rollRR(AVLNode<Data, Key>* nodeToRoll){
         bool isRightSon = nodeToRoll->getFather()->getRightSon() == nodeToRoll;
 
