@@ -45,7 +45,7 @@ StatusType DataStructure::removeDataCenter(int dataCenterID) {
         linuxTree->remove(linuxKey);
         idTree->remove(dataCenterID);
     } catch (DataStructureException &d) {
-        return d.statusType;
+        return d.getException();
     }
     numberOfDataCenters--;
 
@@ -70,7 +70,7 @@ StatusType DataStructure::addDataCenter(int dataCenterId, int numOfServers) {
         return ALLOCATION_ERROR;
     }
     catch (DataStructureException &d) {
-        return d.statusType;
+        return d.getException();
     }
 }
 
@@ -99,7 +99,7 @@ StatusType DataStructure::requestServerFromDataCenter(int dataCenterId
             linuxTree->insert(dataCenterId, linuxKey);
         }
     } catch (DataStructureException &d) {
-        return d.statusType;
+        return d.getException();
     }
 
     return SUCCESS;
@@ -113,7 +113,7 @@ StatusType DataStructure::freeServerFromDataCenter(int dataCenterID, int serverI
         auto currentDataCenter = idTree->findData(dataCenterID);
         currentDataCenter->freeServer(serverID);
     } catch (DataStructureException &d) {
-        return d.statusType;
+        return d.getException();
     }
 
     return SUCCESS;
@@ -137,7 +137,7 @@ StatusType DataStructure::getDataCentersByOs(int os, int **dataCenters, int *num
         }
     } catch (DataStructureException &d) {
         free(*dataCenters);
-        return d.statusType;
+        return d.getException();
     }
     *numOfDataCenters = numberOfDataCenters;
     return SUCCESS;
