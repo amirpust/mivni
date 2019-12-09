@@ -15,34 +15,56 @@ typedef enum{
 }Sons;
 
 /** AVL Tree
- * To use this class, please send ad a template 2 classes.
+ * To use this class, please send as a template 2 classes.
  * @tparam: Data - the data the tree will keep.
  * Requirments:
  * operator =
  * copyCtor (...)
+ * empty Ctor () - for a dummy root
  * @tparam Key - the tree will arrange itself according to it.
  * Requirments:
  * operator ==
  * operator >
  * copyCtor (...)
+ * empty Ctor () - for a dummy root
  */
  template <class Data, class Key>
 class AVLTree {
-    AVLNode<Data, Key>* root;  //Dummy Root - the left son is the real first node
+    AVLNode<Data, Key>* root;  //Dummy Root- the left son is the real first node
 public:
+    /** c'tor
+     * @throws OutOfMemory in case of bad allocation
+     * @time_complexity O(1)
+     * @memory_complexity O(1)
+     */
     explicit AVLTree(){
-       root = new AVLNode<Data, Key>(nullptr);
+        try {
+            root = new AVLNode<Data, Key>(nullptr);
+        }catch (exception e){
+            throw OutOfMemory();
+        }
     };
+
+    /** D'tor
+     * Clean the tree, and destroy the instance.
+     * @time_complexity number of keys in the tree
+     * @memory_complexity log(number of keys in the tree)
+     */
     ~AVLTree(){
         treeClear();
         delete root;
     };
 
-    /**
+    /** insert
+     * This function receive a data and a key and save a replica of them
+     * Please note that to avoid memory leak, the function that calls to this
+     * one shouldn't save the data nor the key.
      * @param data
-     * @throws OutOfMemory
-     * @throws AlreadyExists
-     * @throws NullArg
+     * @param key
+     * @throws OutOfMemory: in case of bad allocation
+     * @throws AlreadyExists: in case the key already exists
+     * @time_complexity log(number of keys in the tree)
+     * @memory_complexity log(number of keys in the tree)
      */
     void insert(Data data, const Key key){
         Sons son;
@@ -67,35 +89,51 @@ public:
         updateTree(father);
     }
 
-    /**
-     * @param Key
+    /** findData
+     * Returns the data which is connected to the provided key
+     * @param key
      * @return Pointer to the data connected to this key
      * @throws DoesntExists
+     * @time_complexity log(number of keys in the tree)
+     * @memory_complexity log(number of keys in the tree)
      */
     Data* findData(const Key& key){
         return findNode(key)->getCurrentData();
     }
 
-    /**
-     * remove just remove the node from the tree - *without deleting the Data*
+    /** remove
+     * Remove the node from the tree, and update the tree accordingly
      * @param Key
      * @throws DoesntExists
+     * @time_complexity log(number of keys in the tree)
+     * @memory_complexity log(number of keys in the tree)
      */
     void remove(const Key& key){
         AVLNode<Data, Key>* node = findNode(key);
         removeNode(node);
     }
 
-    //TODO: for debugging - delete before sub
+    /** printInOrder
+     * Print the data in order. The data should have << operator.
+     * Useful function for debugging
+     * @time_complexity number of keys in the tree
+     * @memory_complexity log(number of keys in the tree)
+     */
     void printInOrder(){
         printInOrderAux(root->getLeftSon());
     }
 
-    /**
-     *
+    /** getDataInOrder
+     * Receive a Data**, that already point on allocated memory, and it's size.
+     * After the call to this function the first numOfData data in the tree will
+     * have a replica in the data param.
+     * Please note that to avoid sigmentaion failure numOfData should be
+     * equal or smaller than number of keys in the tree.
      * @param keys
      * @param numOfKeys
      * @throws DoesntExists - in case of empty tree
+     * @time_complexity numOfData(param) + log(number of keys in the tree)
+     * @memory_complexity log(number of keys in the tree)
      */
     void getDataInOrder(Data** data, const int numOfData){
         int index = 0;
@@ -104,20 +142,27 @@ public:
         getDataInOrderAux(data, numOfData, &index, root->getLeftSon());
     }
 
+    /** treeClear
+     * Delete all the data&keys in the tree.
+     * @time_complexity number of keys in the tree
+     * @memory_complexity log(number of keys in the tree)
+     */
     void treeClear(){
         removeAll(root->getLeftSon());
     }
 
+// =============== private functions ===============
 private:
 
-    /**
-     * TODO: explain
+    /** getDataInOrderAux
+     * A Recursion function which helps the getDataInOrder
      * @param data
      * @param numOfData
      * @param index
      * @param node
      */
-    void getDataInOrderAux(Data** data, const int numOfData, int* index, AVLNode<Data, Key>* node){
+    void getDataInOrderAux(Data** data, const int numOfData, int* index,
+            AVLNode<Data, Key>* node){
         if( *index >= numOfData || node == nullptr)
             return;
         getDataInOrderAux(data,numOfData,index,node->getLeftSon());
@@ -126,8 +171,8 @@ private:
         getDataInOrderAux(data,numOfData,index,node->getRightSon());
     }
 
-    /** TODO: Explain
-     * remove the tree which r is its root bt post order
+    /** removeAll
+     * Remove the tree which node is its root by post order.
      * @param node
      */
     void removeAll(AVLNode<Data, Key>* node){
@@ -138,7 +183,10 @@ private:
         delete node;
     }
 
-    //Todo
+    /** removeNode
+     * Remove the node from the tree and update it (rolls, etc)
+     * @param node
+     */
     void removeNode(AVLNode<Data, Key>* node){
         AVLNode<Data, Key>* replacement = nullptr;
         AVLNode<Data, Key>* repFather = nullptr;
@@ -165,7 +213,10 @@ private:
         updateTree(repFather);
     }
 
-    //TODO: for debugging
+    /**printInOrderAux
+     * A Recursion function which helps the printInOrder
+     * @param node
+     */
     void printInOrderAux(AVLNode<Data, Key>* node){
         if(node == nullptr)
             return;
@@ -175,14 +226,12 @@ private:
 
     }
 
-    /** Read:
- * Inside every data there is a ptr to the node, this function will be used
- * only in case we need to find the node that contains the real data by a dummy that carries the same id.    *
- * @param data - dummy data that helps us find the real data through the right
- * Compare function
- * @return AVLNode* of the Node that has the data or nullptr in case the data do not exists.
- * @throws DoesntExists
- */
+    /** findNode
+    * Find the node which contains the key.
+    * @param key
+    * @return AVLNode*
+    * @throws DoesntExists
+    */
     AVLNode<Data, Key>* findNode(const Key& key){
         AVLNode<Data, Key>* temp = root->getLeftSon();
         while(temp != nullptr){
@@ -197,15 +246,13 @@ private:
     }
 
     /**
- * Find the legitimate father of the data.
- * Used mainly to find a place to a new node.
- * @param data the
- * @param son is an int ptr that holds where the son needs to be.
- * @return
- * The AVLNode to the father
- * @throws
- *  AlreadyExists
- */
+    * Find the legitimate father of the data.
+    * Used mainly to find a place to a new node.
+    * @param key
+    * @param son is a ptr that holds where the son needs to be.
+    * @return The AVLNode to the father
+    * @throws AlreadyExists
+    */
     AVLNode<Data, Key>* findFather(const Key& key, Sons* son){
         AVLNode<Data, Key>* toCheck = root->getLeftSon();
         if(toCheck == nullptr){
@@ -230,15 +277,17 @@ private:
             }
         }
         return nullptr;
-
     }
 
     /**findReplacement
-     * find a replacement for the node, and reap it from it's place.
-     * i.e. sets the replacements right son to its father as a left son
+     * find a replacement for the node.
      * === Does not change any other value ===
-     * @param node
-     * @return
+     * @param nodeToReplace
+     * @param replacement a ptr that will point to the replacement after this
+     * call
+     * @param repFather a ptr that will point to the the tree will need to start
+     * update from after this call.
+     * except 1 edge case - it will be the replacement father
      */
     void findReplacement(const AVLNode<Data, Key>* nodeToReplace,AVLNode<Data, Key>** replacement ,AVLNode<Data, Key>** repFather){
         assert(nodeToReplace != nullptr);
@@ -257,9 +306,13 @@ private:
         }
     }
 
-    /**
-     *
-     *
+    /** updateTree
+     * Update the tree from the param up in this order:
+     *      check if the node is the root
+     *      update high and BF of the node
+     *      check if the hight changes
+     *      check if the BF out of bounds
+     *      roll the hell out of it
      * @param updateFrom
      */
     void updateTree(AVLNode<Data, Key>* updateFrom){
@@ -281,6 +334,10 @@ private:
         }
     }
 
+    /** Rolls
+     * and not the tasty ones...
+     * @param nodeToRoll
+     */
     static void rollRR(AVLNode<Data, Key>* nodeToRoll){
         bool isRightSon = nodeToRoll->getFather()->getRightSon() == nodeToRoll;
 
