@@ -44,7 +44,7 @@ public:
      * @throws AlreadyExists
      * @throws NullArg
      */
-    void insert(Data& data, const Key& key){
+    void insert(Data data, const Key key){
         Sons son;
         AVLNode<Data, Key>* father = findFather(key, &son);
 
