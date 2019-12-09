@@ -8,51 +8,57 @@ using std::exception;
 
 class DataStructureException: public exception{
 public:
-    StatusType statusType;
-    explicit DataStructureException(StatusType s):statusType(s){};
+    explicit DataStructureException() = default;
+    virtual StatusType getException() = 0;
 };
 
 class OutOfMemory : public DataStructureException{
 public:
-    OutOfMemory():
-            DataStructureException(ALLOCATION_ERROR){};
+    StatusType getException() override {
+        return ALLOCATION_ERROR;
+    }
 };
 
 class AlreadyExists: public DataStructureException{
 public:
-    AlreadyExists():
-            DataStructureException(FAILURE){};
+    StatusType getException() override {
+        return FAILURE;
+    }
 };
 
 class InvalidInput: public DataStructureException{
 public:
-    InvalidInput():
-            DataStructureException(INVALID_INPUT){};
+    StatusType getException() override {
+        return INVALID_INPUT;
+    }
 };
 
 class NullArg: public DataStructureException{
 public:
-    NullArg():
-            DataStructureException(FAILURE){};
+    StatusType getException() override {
+        return FAILURE;
+    }
 };
 
 class DoesntExists: public DataStructureException{
 public:
-    DoesntExists():
-            DataStructureException(FAILURE){};
+    StatusType getException() override {
+        return FAILURE;
+    }
 };
 
 class NoFreeServers: public DataStructureException{
 public:
-    NoFreeServers():
-            DataStructureException(FAILURE){};
+    StatusType getException() override {
+        return FAILURE;
+    }
 };
 
 class AlreadyFree: public DataStructureException{
 public:
-    AlreadyFree():
-            DataStructureException(FAILURE){};
+    StatusType getException() override {
+        return FAILURE;
+    }
 };
-
 
 #endif //_DataStructureExceptionS_H
