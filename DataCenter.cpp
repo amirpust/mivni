@@ -101,22 +101,6 @@ void DataCenter::initializeListAndPointerArray() {
     }
 }
 
-const bool DataCenter::operator==(const int key) const {
-    return this->getDataCenterId() == key;
-}
-
-const bool DataCenter::operator>(const int key) const {
-    return this->getDataCenterId() > key;
-}
-
-const bool DataCenter::operator==(const DataCenter &dataCenter) const {
-    return this->getDataCenterId() == dataCenter.getDataCenterId();
-}
-
-const bool DataCenter::operator>(const DataCenter &dataCenter) const {
-    return this->getDataCenterId() > dataCenter.getDataCenterId();
-}
-
 void DataCenter::changeServerAmount(int os) {
     if (os == WINDOWS) {
         linuxServerNumber--;
@@ -266,3 +250,23 @@ DataCenter::DataCenter() : dataCenterID(0),
                            linuxListEnd(nullptr),
                            windowsListHead(nullptr),
                            windowsListEnd(nullptr) {}
+
+DataCenter::DataCenter(DataCenter &toCopy) :
+        dataCenterID(toCopy.dataCenterID), numberOfServers(toCopy.numberOfServers),
+        linuxServerNumber(toCopy.linuxServerNumber), windowsServerNumber(toCopy.windowsServerNumber),
+        unusedServers(toCopy.unusedServers) {
+
+    initializePointerArray();
+
+    initializeLinuxEnd();
+    initializeLinuxHead();
+    linuxListEnd->setPrevious(linuxListHead);
+    linuxListHead->setNext(linuxListEnd);
+
+    initializeWindowsEnd();
+    initializeWindowsHead();
+    windowsListEnd->setPrevious(windowsListHead);
+    windowsListHead->setNext(windowsListEnd);
+
+    initializeListAndPointerArray();
+}

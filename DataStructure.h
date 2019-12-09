@@ -151,6 +151,7 @@ public:
                 linuxTree->getDataInOrder(dataCenters, numberOfDataCenters);
             }
         } catch (DataStructureException &d) {
+            free(*dataCenters);
             return d.statusType;
         }
         *numOfDataCenters = numberOfDataCenters;
