@@ -11,36 +11,18 @@ class DataCenter {
     int linuxServerNumber;
     int windowsServerNumber;
     int unusedServers;
-    Server **pointerArray;
-    Server *linuxListHead;
-    Server *linuxListEnd;
-    Server *windowsListHead;
-    Server *windowsListEnd;
+    Server **pointerArray{};
+    Server *linuxListHead{};
+    Server *linuxListEnd{};
+    Server *windowsListHead{};
+    Server *windowsListEnd{};
 
 public:
     DataCenter(int dataCenterId, int numberOfServers);
 
     DataCenter();
 
-    DataCenter(DataCenter &toCopy) :
-            dataCenterID(toCopy.dataCenterID), numberOfServers(toCopy.numberOfServers),
-            linuxServerNumber(toCopy.linuxServerNumber), windowsServerNumber(toCopy.windowsServerNumber),
-            unusedServers(toCopy.unusedServers) {
-
-        initializePointerArray();
-
-        initializeLinuxEnd();
-        initializeLinuxHead();
-        linuxListEnd->setPrevious(linuxListHead);
-        linuxListHead->setNext(linuxListEnd);
-
-        initializeWindowsEnd();
-        initializeWindowsHead();
-        windowsListEnd->setPrevious(windowsListHead);
-        windowsListHead->setNext(windowsListEnd);
-
-        initializeListAndPointerArray();
-    };
+    DataCenter(DataCenter &toCopy);;
 
     int getDataCenterId() const;
 
@@ -49,14 +31,6 @@ public:
     int getwindowsServerNumber() const;
 
     int getNumberOfServers() const;
-
-    const bool operator>(const DataCenter &dataCenter) const;
-
-    const bool operator==(const DataCenter &dataCenter) const;
-
-    const bool operator>(int key) const;
-
-    const bool operator==(int key) const;
 
     /**
      * This function decides if the server is free, if so it assigns it with the
