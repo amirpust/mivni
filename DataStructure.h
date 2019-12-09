@@ -48,7 +48,7 @@ public:
             return ALLOCATION_ERROR;
         }
         catch (DataStructureException &d) {
-            return d.statusType;
+            return d.getException();
         }
     }
 
@@ -73,7 +73,7 @@ public:
             linuxTree->remove(linuxKey);
             idTree->remove(dataCenterID);
         } catch (DataStructureException &d) {
-            return d.statusType;
+            return d.getException();
         }
         numberOfDataCenters--;
 
@@ -115,7 +115,7 @@ public:
                 linuxTree->insert(dataCenterId, linuxKey);
             }
         } catch (DataStructureException &d) {
-            return d.statusType;
+            return d.getException();
         }
 
         return SUCCESS;
@@ -129,7 +129,7 @@ public:
             auto currentDataCenter = idTree->findData(dataCenterID);
             currentDataCenter->freeServer(serverID);
         } catch (DataStructureException &d) {
-            return d.statusType;
+            return d.getException();
         }
 
         return SUCCESS;
@@ -152,7 +152,7 @@ public:
             }
         } catch (DataStructureException &d) {
             free(*dataCenters);
-            return d.statusType;
+            return d.getException();
         }
         *numOfDataCenters = numberOfDataCenters;
         return SUCCESS;
