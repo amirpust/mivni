@@ -6,6 +6,11 @@
 
 using std::exception;
 
+/** DataStructureException
+ * an abstract class which will be override by specific exceptions
+ * the function getException() will return the right StatusType
+ * accordingly to the exception.
+ */
 class DataStructureException: public exception{
 public:
     explicit DataStructureException() = default;

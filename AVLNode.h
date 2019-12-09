@@ -6,11 +6,17 @@
 #include "Server.h"
 #include "DataCenter.h"
 
+/** AVLNode
+ * A helper class to manage the AVL tree
+ * @tparam Data
+ * @tparam Key
+ */
 template<class Data, class Key>
 class AVLNode {
 private:
     Data currentData;
     const Key key;
+
     AVLNode<Data, Key> *father;
     AVLNode<Data, Key> *rightSon;
     AVLNode<Data, Key> *leftSon;
@@ -30,18 +36,28 @@ public:
 
     //only to create the root
     explicit  AVLNode(AVLNode<Data, Key> *leftSon, int nodeHeight = 0, int bf = 0)
-            :key(Key()),father(nullptr),rightSon(nullptr), leftSon(leftSon), nodeHeight(nodeHeight), bf(bf) {}
+            :key(Key()),father(nullptr),rightSon(nullptr), leftSon(leftSon), nodeHeight(nodeHeight), bf(bf) {};
 
+    virtual ~AVLNode() = default;
+
+    /** isRightSon
+     * @return true if the node is the right son of it's father
+     *         false otherwise
+     * @throws NullArg in case father is nullptr
+     */
     bool isRightSon() const {
+        if(this->getFather() == nullptr){
+            throw NullArg();
+        }
         return this->getFather()->getRightSon() == this;
     }
 
     /**
- * update the heights and the BF.
- * @return
- * true: if the height is changed
- * false: otherwise
- */
+    * update the heights and the BF.
+    * @return
+    * true: if the height is changed
+    * false: otherwise
+    */
     bool updateHeightsAndBF() {
         int rightSonHeight = getSonHeight(rightSon);
         int leftSonHeight = getSonHeight(leftSon);
@@ -52,8 +68,6 @@ public:
         }
         return false;
     };
-
-    virtual ~AVLNode() = default;
 
     void setRightSon(AVLNode<Data, Key> *_rightSon) {
         assert(_rightSon != this);
