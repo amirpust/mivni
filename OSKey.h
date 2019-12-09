@@ -13,8 +13,7 @@ public:
 
 
     OSKey(const OSKey &toCopy) : osSystem(toCopy.osSystem),
-                                 numberOfServers(toCopy.numberOfServers)
-                                 , dataCenterID(toCopy.dataCenterID) {};
+    numberOfServers(toCopy.numberOfServers), dataCenterID(toCopy.dataCenterID) {};
 
 
 //TODO check who comes before.
@@ -39,6 +38,11 @@ public:
         }
 
         return false;
+    }
+
+    bool operator==(const OSKey &_key) const {
+        assert(osSystem == _key.osSystem);
+        return (numberOfServers == _key.numberOfServers && dataCenterID == _key.dataCenterID);
     }
 };
 

@@ -84,7 +84,7 @@ public:
         return currentData;
     }
 
-    const Key *getKey() const {
+    const Key &getKey() const {
         return key;
     }
 

@@ -19,6 +19,13 @@ class DataCenter {
 
 public:
     DataCenter(int dataCenterId, int numberOfServers);
+    DataCenter(DataCenter& toCopy):
+    dataCenterID(toCopy.dataCenterID),numberOfServers(toCopy.numberOfServers)
+    ,linuxServerNumber(toCopy.linuxServerNumber)
+    ,windowsServerNumber(toCopy.windowsServerNumber)
+    ,unusedServers(toCopy.unusedServers){
+
+    };
 
     int getDataCenterId() const;
 
